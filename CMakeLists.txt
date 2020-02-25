@@ -3,4 +3,6 @@ project(SemestrWork C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(SemestrWork main.c)
+find_package(GLUT)
+
+add_executable(SemestrWork compressor.c lol.h)

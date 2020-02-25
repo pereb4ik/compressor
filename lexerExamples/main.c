@@ -5,8 +5,7 @@
 
 #define def define
 #define en enum
-//f dfg dfg\
-dfgdfgdfg
+
 
 en A {
     a = 123,
@@ -22,6 +21,8 @@ int fileSize(FILE *f) {
 }
 
 static int curSize = 0;
+
+/**** // / // lol heh */
 
 char *removeComments(char *str, int size) {
     char *out = (char *) malloc((size + 1) * sizeof(char));
@@ -59,7 +60,7 @@ char *removeComments(char *str, int size) {
 
             if (str[i] == '*') {
                 i++;
-                // this code accept "/*/" like comments
+                // this code accept "/* */" like comments
                 while (i < size && (str[i - 1] != '*' || str[i] != '/')) {
                     i++;
                 }

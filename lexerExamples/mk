@@ -1,0 +1,1 @@
+cc -ll lex.yy.c -v

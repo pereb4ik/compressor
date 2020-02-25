@@ -1,0 +1,3 @@
+yacc -dt prsr.y //with debug (-d key)
+lex prsr.l
+cc -ll lex.yy.c y.tab.c
