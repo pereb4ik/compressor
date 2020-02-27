@@ -5,4 +5,4 @@ set(CMAKE_C_STANDARD 11)
 
 find_package(GLUT)
 
-add_executable(SemestrWork compressor.c lol.h)
+add_executable(SemestrWork compressor.c hashtable.c array.c common.c)
