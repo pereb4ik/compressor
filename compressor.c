@@ -38,7 +38,6 @@ void nextStringShift() {
  */
 void lex(int size, char *str) {
 
-
     int curV = 0;
     for (int i = 0; i < size; ++i) {
         curV = go(str[i]);
@@ -47,19 +46,25 @@ void lex(int size, char *str) {
     int sz = hashtable_size(lexems);
     vertex vert[sz];
     int itr = 0;
-    HashTableIter *iter;
-    hashtable_iter_init(iter, lexems);
+    HashTableIter iter;
+    hashtable_iter_init(&iter, lexems);
     TableEntry *cur;
-    while (hashtable_iter_next(iter, &cur) != CC_ITER_END) {
-        vert[itr++] = *makeVert(cur->key, cur->value);
-        printf("%s ", cur->key);
-        printf("%d \n", cur->value);
+
+    while (hashtable_iter_next(&iter, &cur) != CC_ITER_END) {
+        int *key = cur->value;
+        vert[itr++] = *makeVert(cur->key, *key);
+        //printf("%s ", cur->key);
+        //printf("%d\n", *key);
     }
+
     mergesort(vert, sz, sizeof(vertex), &compare);
-    curSize = 1;
+    for (int i = 0; i < itr - 1; ++i) {
+        printf("%s ", vert[i].str);
+        printf("%d\n", vert[i].count);
+    }
+    //curSize = 1;
     //int kek = 0;
     //int ind = 0;
-
     /**while (true) {
         while (hashtable_get(lexems, &curShift, &kek) == CC_OK) {
             nextStringShift();
@@ -107,19 +112,21 @@ void writeHead() {
     fclose(head);
 }
 
-/**void test() {
+void test() {
     build();
 
-    FILE *input = fopen("../main.c", "rt");
+    FILE *input = fopen("../kek.txt", "rt");
     int size = fileSize(input);
 
     char *s = (char *) malloc((size + 1) * sizeof(char));
     fread(s, size + 1, 1, input);
     lex(size + 1, s);
-}**/
+}
 
 int main(int argsn, char *args[]) {
-    char *files[argsn];
+    test();
+
+    /*char *files[argsn];
     int sizes[argsn];
 
     for (int i = 0; i < argsn; ++i) {
@@ -135,7 +142,7 @@ int main(int argsn, char *args[]) {
 
     for (int i = 0; i < argsn; ++i) {
         write(sizes[i] + 1, files[i], args[i]);
-    }
+    }*/
 
 
     /**HashTable *table;

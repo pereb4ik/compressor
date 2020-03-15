@@ -1,6 +1,10 @@
-asdasd asd
+#asdasd asd
 a
 sd
 asda
 sda
 sd
+int a = 123;
+int b = 123;
+int c = 1_23;
+char* heh = "4asdi371tdsf f";

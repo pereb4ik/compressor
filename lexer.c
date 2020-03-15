@@ -55,11 +55,12 @@ HashTable *mapper;
 /// very big C in O(n)
 
 void countLexeme(char *token) {
-    int *count = 0;
+    int *count;
     if (hashtable_get(lexems, token, &count) == CC_OK) {
-        count++;
+        (*count)++;
     } else {
-        count = 1;
+        count = (int *) (malloc(sizeof(int)));
+        *count = 1;
     }
     hashtable_add(lexems, token, count);
 }
@@ -79,6 +80,22 @@ void startLexem() {
     ind = 0;
 }
 
+
+//fuck yeah string lex
+//copypaste of flex
+void slex() {
+    static int even = 1;
+    even = 1 - even;
+    if (even == 0) {
+        startLexem();
+        addC();
+    } else {
+        addC();
+        buff[ind] = '\0';
+        countLexeme(buff);
+    }
+}
+
 //fuck yeah lex
 void flex() {
     static int even = 1;
@@ -87,7 +104,6 @@ void flex() {
         startLexem();
         addC();
     } else {
-        addC();
         buff[ind] = '\0';
         countLexeme(buff);
     }
@@ -136,15 +152,15 @@ int goV[13][10] = {
 };
 
 void (*f[13][10])() = {
-        {V,    V,    V,    V,    V,    V,    flex, flex, flex, V},
+        {V,    V,    V,    V,    V,    V,    slex, slex, flex, V},
         {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},
         {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},
         {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},
         {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},
         {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},
-        {addC, addC, addC, addC, addC, addC, flex, addC, addC, addC},
+        {addC, addC, addC, addC, addC, addC, slex, addC, addC, addC},
         {addC, addC, addC, addC, addC, addC, addC, addC, addC, addC},
-        {addC, addC, addC, addC, addC, addC, addC, flex, addC, addC},
+        {addC, addC, addC, addC, addC, addC, addC, slex, addC, addC},
         {addC, addC, addC, addC, addC, addC, addC, addC, addC, addC},
         {flex, flex, flex, flex, flex, flex, flex, flex, addC, flex},
         {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},
@@ -175,8 +191,6 @@ int go2(char c) {
  * 8 [a-zA-Z0-9_]
  * 9 [#]
  */
-
-
 
 /**
  * Build 'lexems' hashtable,
