@@ -21,4 +21,8 @@ char *concat(char *s1, char *s2) {
     return buff;
 }
 
+char *allocstring(int size) {
+    return (char *) (malloc(sizeof(char) * (size)));
+}
+
 #endif

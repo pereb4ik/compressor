@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include <form.h>
 #include "hashtable.h"
+#include "utils.c"
+
 
 #define long long long
 
@@ -76,7 +78,7 @@ void addC() {
 
 void startLexem() {
     // you should free this space
-    buff = (char *) (malloc(sizeof(char) * 10000));
+    buff = allocstring(1000);
     ind = 0;
 }
 

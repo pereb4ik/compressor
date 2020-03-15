@@ -9,7 +9,7 @@
 #include "utils.c"
 
 int curSize;
-char *curShift = {'a', '\0'};
+char *curShift;
 
 /**
  * Realize normal shifter, with black jack and A-Z
@@ -37,6 +37,11 @@ void nextStringShift() {
  * Read and lex
  */
 void lex(int size, char *str) {
+    //build curShift
+
+    curShift = allocstring(2);
+    curShift[0] = 'a' - 1;
+    curShift[1] = '\0';
 
     int curV = 0;
     for (int i = 0; i < size; ++i) {
@@ -62,23 +67,28 @@ void lex(int size, char *str) {
         printf("%s ", vert[i].str);
         printf("%d\n", vert[i].count);
     }
-    //curSize = 1;
-    //int kek = 0;
-    //int ind = 0;
-    /**while (true) {
+    curSize = 1;
+    int *kek;
+    for (int ind = itr - 2; ind > -1; ind--) {
+        nextStringShift();
         while (hashtable_get(lexems, &curShift, &kek) == CC_OK) {
             nextStringShift();
         }
         if (vert[ind].fx[curSize] > 0) {
-            char cur[curSize + 1];
+            //char cur[curSize + 1];
+            char *cur = allocstring(curSize + 1);
             strcpy(cur, curShift);
-            hashtable_add(mapper, &(vert[ind].str), &cur);
+            hashtable_add(mapper, vert[ind].str, cur);
             //add define here
         } else {
             break;
         }
-        ind++;
-    }**/
+    }
+    hashtable_iter_init(&iter, mapper);
+    while (hashtable_iter_next(&iter, &cur) != CC_ITER_END) {
+        printf("%s ", cur->key);
+        printf("%s\n", cur->value);
+    }
 }
 
 /* // Second read
@@ -112,10 +122,13 @@ void writeHead() {
     fclose(head);
 }
 
+
+char *testFilename = "../main.c";
+
 void test() {
     build();
 
-    FILE *input = fopen("../kek.txt", "rt");
+    FILE *input = fopen(testFilename, "rt");
     int size = fileSize(input);
 
     char *s = (char *) malloc((size + 1) * sizeof(char));
