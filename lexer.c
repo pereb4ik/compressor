@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <form.h>
-#include "hashtable.h"
+#include "collections/hashtable.h"
 #include "utils.c"
 
 
@@ -176,10 +176,6 @@ int go(char c) {
     curV = goV[curV][e];
     //printf("%d\n", curV);
     return curV;
-}
-
-int go2(char c) {
-
 }
 
 /**

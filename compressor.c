@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <mach/boolean.h>
-#include "hashtable.h"
-#include "stack.h"
+#include "collections/hashtable.h"
+#include "collections/stack.h"
 
 
 #include "lexer.c"
