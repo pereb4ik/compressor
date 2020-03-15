@@ -3,6 +3,4 @@ project(SemestrWork C)
 
 set(CMAKE_C_STANDARD 11)
 
-find_package(GLUT)
-
-add_executable(SemestrWork compressor.c hashtable.c array.c common.c lexer.c)
+add_executable(SemestrWork compressor.c hashtable.c array.c common.c)

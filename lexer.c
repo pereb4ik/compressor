@@ -1,8 +1,8 @@
+#include <stdlib.h>
 #include <form.h>
 #include "hashtable.h"
 
 #define long long long
-
 
 const int NumOfSamples = 5;
 
@@ -41,12 +41,16 @@ int compare(vertex *a, vertex *b) {
 
 int class[256];
 
-int curV;
-
-void (*f[])();
+int curV = 0;
 
 HashTable *lexems;
 
+HashTable *mapper;
+
+
+/**
+ * transition functions
+ */
 
 /// very big C in O(n)
 
@@ -60,7 +64,46 @@ void countLexeme(char *token) {
     hashtable_add(lexems, token, count);
 }
 
+
+char *buff;
+char curChar;
+int ind;
+
+void addC() {
+    buff[ind++] = curChar;
+}
+
+void startLexem() {
+    // you should free this space
+    buff = (char *) (malloc(sizeof(char) * 10000));
+    ind = 0;
+}
+
+//fuck yeah lex
+void flex() {
+    static int even = 1;
+    even = 1 - even;
+    if (even == 0) {
+        startLexem();
+        addC();
+    } else {
+        addC();
+        buff[ind] = '\0';
+        countLexeme(buff);
+    }
+}
+
+
+//void function
+void V() {
+
+}
+
+
+//////////////////
+
 /**
+ * 0 - all
  * 1 [*]
  * 2 [/]
  * 3 [\n]
@@ -72,14 +115,12 @@ void countLexeme(char *token) {
  * 9 [#]
  */
 
-
-
 /**
  * please, add space/tab scipper
  * maybe add EOF???
  */
 int goV[13][10] = {
-        {0,  0,  1,  0,  0,  0,  6,  8,  10, 0}, // 0 start vertex
+        {0,  0,  1,  0,  0,  0,  6,  8,  10, 11}, // 0 start vertex
         {0,  2,  4,  0,  0,  0,  0,  0,  0,  0}, // 1 comments start
         {2,  3,  2,  2,  2,  2,  2,  2,  2,  2}, // 2 /* comments
         {2,  3,  0,  2,  2,  2,  2,  2,  2,  2}, // 3 /* comments
@@ -94,13 +135,34 @@ int goV[13][10] = {
         {11, 11, 11, 11, 12, 12, 11, 11, 11, 11} // 12 # scipper
 };
 
+void (*f[13][10])() = {
+        {V,    V,    V,    V,    V,    V,    flex, flex, flex, V},
+        {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},
+        {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},
+        {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},
+        {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},
+        {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},
+        {addC, addC, addC, addC, addC, addC, flex, addC, addC, addC},
+        {addC, addC, addC, addC, addC, addC, addC, addC, addC, addC},
+        {addC, addC, addC, addC, addC, addC, addC, flex, addC, addC},
+        {addC, addC, addC, addC, addC, addC, addC, addC, addC, addC},
+        {flex, flex, flex, flex, flex, flex, flex, flex, addC, flex},
+        {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},
+        {V,    V,    V,    V,    V,    V,    V,    V,    V,    V}
+};
+
 int go(char c) {
-    int e = class[c];
-    f[e]();
+    curChar = c;
+    int e = class[128 + c];
+    f[curV][e]();
     curV = goV[curV][e];
+    //printf("%d\n", curV);
     return curV;
 }
 
+int go2(char c) {
+
+}
 
 /**
  * 1 [*]
@@ -116,8 +178,16 @@ int go(char c) {
 
 
 
+/**
+ * Build 'lexems' hashtable,
+ *       class mapper,
+ *       'mapper' hashtable
+ *
+ */
+
 void build() {
     hashtable_new(&lexems);
+    hashtable_new(&mapper);
 
     // define classes
 

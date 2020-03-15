@@ -3,17 +3,6 @@
 
 #define FL FILE*
 
-#define def define
-#define en enum
-//f dfg dfg\
-dfgdfgdfg
-
-en A {
-    a = 123,
-    b = 321
-};
-
-
 int fileSize(FILE *f) {
     fseek(f, 0, SEEK_END);
     int size = ftell(f);
@@ -92,7 +81,7 @@ char *removeDelimers(char *str, int size) {
 
 
 int main() {
-    /*FILE *input = fopen("kek.txt", "rt");
+    //FILE *input = fopen("kek.txt", "rt");
     //FILE *output = fopen("lel.txt", "wt");
     //int size = fileSize(input);
     int size = fileSize(input);
@@ -102,6 +91,6 @@ int main() {
     //fprintf(input, "hehmda");
     printf("%s", removeComments(str, size));
 
-    //fclose(input); */
+    //fclose(input);
     return 0;
 }
