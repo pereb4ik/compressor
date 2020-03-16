@@ -101,7 +101,6 @@ void lex(int size, char *str) {
             nextStringShift();
         }
         if (vert[ind].fx[curSize] > 0) {
-            //char cur[curSize + 1];
             char *cur = allocstring(curSize + 1);
             strcpy(cur, curShift);
             hashtable_add(mapper, vert[ind].str, cur);
@@ -154,7 +153,7 @@ void writeHead() {
 }
 
 
-char *testFilename = "../collections/hashtable.c";
+char *testFilename = "../kek.txt";
 
 char *testFileOut = "../outmain.c";
 

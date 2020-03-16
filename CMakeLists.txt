@@ -3,5 +3,5 @@ project(SemestrWork C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(SemestrWork test.c)
-#add_executable(SemestrWork compressor.c collections/hashtable.c collections/array.c collections/common.c)
+#add_executable(SemestrWork test.c)
+add_executable(SemestrWork compressor.c collections/hashtable.c collections/array.c collections/common.c)

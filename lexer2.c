@@ -75,6 +75,12 @@ void add() {
     outFile[indf++] = Char;
 }
 
+//print slash, crutch
+void sla() {
+    outFile[indf++] = '/';
+    add();
+}
+
 /**
  * 0 - all
  * 1 [*]
@@ -106,7 +112,7 @@ int gov[13][10] = {
 
 void (*F[13][10])() = {
         {add,  add,  V,    add,  add,  add,  siex, siex, fiex, add},
-        {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},
+        {sla,  V,    V,    sla,  sla,  sla,  sla,  sla,  sla,  sla},
         {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},
         {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},
         {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},
