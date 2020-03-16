@@ -154,7 +154,6 @@ char *testFilename = "../main.c";
 char *testFileOut = "../outmain.c";
 
 void test() {
-    build();
 
     FILE *input = fopen(testFilename, "rt");
     int size = fileSize(input);
@@ -172,9 +171,9 @@ int main(int argsn, char *args[]) {
     build();
     build2();
 
-    printf("%s\n%s\n%s\n", args[0], args[1], args[2]);
-    testFilename = args[1];
-    testFileOut = args[2];
+    //printf("%s\n%s\n%s\n", args[0], args[1], args[2]);
+    //testFilename = args[1];
+    //testFileOut = args[2];
     test();
 
     /*char *files[argsn];
