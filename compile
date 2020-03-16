@@ -1,0 +1,3 @@
+#!/bin/bash
+
+cc compressor.c collections/array.c collections/common.c collections/hashtable.c
