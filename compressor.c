@@ -94,12 +94,12 @@ void write(int size, char *str, char *filename) {
         go2(str[i]);
     }
     outFile[indf] = '\0';
-    printf("%s", outFile);
-    /*FILE *output = fopen(filename, "wt");
+    //printf("%s", outFile);
+    FILE *output = fopen(filename, "wt");
     if (hasTokens) {
         fprintf(output, "#include \"ALL_DEFINES.h\"\n");
-
-    }*/
+    }
+    fprintf(output, outFile);
 }
 
 void writeHead() {
@@ -129,7 +129,7 @@ int main(int argsn, char *args[]) {
         FILE *input = fopen(args[i], "rt");
         int size = fileSize(input);
         sizes[i] = size;
-        files[i] = (char *) malloc((size + 1) * sizeof(char));
+        files[i] = allocstring(size + 1);
         fread(files[i], size + 1, 1, input);
         lex(size + 1, files[i]);
     }
