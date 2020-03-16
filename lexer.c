@@ -64,7 +64,7 @@ void countLexeme(char *token) {
     if (hashtable_get(lexems, token, &count) == CC_OK) {
         (*count)++;
     } else {
-        count = (int *) (malloc(sizeof(int)));
+        count = allocint();
         *count = 1;
     }
     hashtable_add(lexems, token, count);

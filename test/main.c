@@ -86,7 +86,7 @@ int main() {
     //int size = fileSize(input);
     int size = fileSize(input);
     char *str = (char *) malloc((size + 1) * sizeof(char));
-    fgets(str, size + 1, input);
+    //fgets(str, size + 1, input);
     fread(str, size + 1, 1, input);
     //fprintf(input, "hehmda");
     printf("%s", removeComments(str, size));

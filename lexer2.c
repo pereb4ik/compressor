@@ -18,12 +18,13 @@ int curv = 0;
 int indf = 0;
 int ind0 = 0;
 
+bool hasTokens = false;
+
 void metadef();
 
 void adC() {
     bufff[ind0++] = Char;
 }
-
 
 void add();
 
@@ -37,7 +38,6 @@ void siex() {
         adC();
         bufff[ind0] = '\0';
         metadef();
-        add();
     }
 }
 
@@ -58,11 +58,12 @@ void metadef() {
     char *def;
     enum cc_stat heh;
     if ((heh = hashtable_get(mapper, bufff, &def)) == CC_OK) {
+        hasTokens = true;
         for (int i = 0; def[i] != '\0'; ++i) {
             outFile[indf++] = def[i];
         }
     } else {
-        for (int i = 0; i < ind0; ++i) {
+        for (int i = 0; bufff[i] != '\0'; ++i) {
             outFile[indf++] = bufff[i];
         }
     }
@@ -71,6 +72,12 @@ void metadef() {
 
 void add() {
     outFile[indf++] = Char;
+}
+
+//print slash, crutch
+void sla() {
+    outFile[indf++] = '/';
+    add();
 }
 
 /**
@@ -104,7 +111,7 @@ int gov[13][10] = {
 
 void (*F[13][10])() = {
         {add,  add,  V,    add,  add,  add,  siex, siex, fiex, add},
-        {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},
+        {sla,  V,    V,    sla,  sla,  sla,  sla,  sla,  sla,  sla},
         {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},
         {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},
         {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},
