@@ -120,6 +120,7 @@ void write(int size, char *str, char *filename) {
         go2(str[i]);
     }
     outFile[indf] = '\0';
+    printf("%s\n", "kek");
     FILE *output = fopen(filename, "wt");
     if (hasTokens) {
         fprintf(output, "%s", "#include \"ALL_DEFINES.h\"\n");
@@ -133,11 +134,11 @@ void write(int size, char *str, char *filename) {
  */
 void writeHead() {
     if (hashtable_size(mapper) > 0) {
-        FILE *head = fopen("ALL_DEFINES.h", "wt");
+        FILE *head = fopen("../ALL_DEFINES.h", "wt");
         HashTableIter *iter;
-        hashtable_iter_init(iter, mapper);
+        hashtable_iter_init(&iter, mapper);
         TableEntry *cur;
-        while (hashtable_iter_next(iter, &cur) != CC_ITER_END) {
+        while (hashtable_iter_next(&iter, &cur) != CC_ITER_END) {
             fprintf(head, "%s", "#define ");
             fprintf(head, "%s", cur->value);
             fprintf(head, "%s", " ");
@@ -151,7 +152,7 @@ void writeHead() {
 int main(int argsn, char *args[]) {
     build();
     build2();
-    char *files[argsn];
+    /*char *files[argsn];
     int sizes[argsn];
 
     for (int i = 1; i < argsn; ++i) {
@@ -162,14 +163,24 @@ int main(int argsn, char *args[]) {
         fread(files[i], size + 1, 1, input);
         fclose(input);
         lex(size + 1, files[i]);
-    }
+    }*/
+    char *filename = "../main2.c";
+
+    FILE *input = fopen(filename, "rt");
+    int size = fileSize(input);
+    char *s = allocstring(size + 1);
+    fread(s, size + 1, 1, input);
+    fclose(input);
+    lex(size + 1, s);
 
     writeHead();
 
+    write(size + 1, s, filename);
+    /*
     for (int i = 1; i < argsn; ++i) {
         write(sizes[i] + 1, files[i], args[i]);
     }
-
+     */
     destroyStrings();
     hashtable_destroy(mapper);
     hashtable_destroy(lexems);
