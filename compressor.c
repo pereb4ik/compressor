@@ -111,8 +111,6 @@ void lex(int size, char *str) {
  * Read, define and write
  */
 void write(int size, char *str, char *filename) {
-    build2();
-
     for (int i = 0; i < size; ++i) {
         go2(str[i]);
     }
@@ -147,6 +145,8 @@ void writeHead() {
 }
 
 int main(int argsn, char *args[]) {
+    build();
+    build2();
 
     char *files[argsn];
     int sizes[argsn];
