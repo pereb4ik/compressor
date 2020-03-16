@@ -165,5 +165,8 @@ int main(int argsn, char *args[]) {
     for (int i = 0; i < argsn; ++i) {
         write(sizes[i] + 1, files[i], args[i]);
     }
+    destroyStrings();
+    hashtable_destroy(mapper);
+    hashtable_destroy(lexems);
     return 0;
 }
