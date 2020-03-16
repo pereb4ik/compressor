@@ -208,5 +208,7 @@ int main(int argsn, char *args[]) {
         hashtable_get(table, &lol, &val);
     }**/
     destroyStrings();
+    hashtable_destroy(mapper);
+    hashtable_destroy(lexems);
     return 0;
 }
