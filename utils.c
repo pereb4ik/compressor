@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifndef BEST_UTILS_H
-#define BEST_UTILS_H
+#ifndef BEST_UTILS_C
+#define BEST_UTILS_C
 
 
 int fileSize(FILE *f) {

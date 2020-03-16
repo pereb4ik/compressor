@@ -3,6 +3,9 @@
 #include "collections/hashtable.h"
 #include "utils.c"
 
+#ifndef BEST_LEXER_C
+#define BEST_LEXER_C
+
 
 #define long long long
 
@@ -231,3 +234,5 @@ void build() {
     goV[1][1] = 2;
     goV[2][1] = 3;
 }
+
+#endif
