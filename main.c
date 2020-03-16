@@ -90,7 +90,7 @@ int main() {
     fread(str, size + 1, 1, input);
     //fprintf(input, "hehmda");
     printf("%s", removeComments(str, size));
-
+    printf("%d", "kekch");
     //fclose(input);
     return 0;
 }

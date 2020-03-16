@@ -13,23 +13,38 @@ int curSize;
 char *curShift;
 
 /**
- * Realize normal shifter, with black jack and A-Z
+ * OK, now there no 0-9
  */
 void nextStringShift() {
+    static int first = 1;
+    static char next[256];
+    if (first) {
+        first = 0;
+        for (char c = 'a'; c < 'z'; ++c) {
+            next[c] = c + 1;
+        }
+        next['z'] = 'A';
+        for (char c = 'A'; c < 'Z'; ++c) {
+            next[c] = c + 1;
+        }
+        next['Z'] = '_';
+        next['a' - 1] = 'a';
+    }
+
     int i = curSize - 1;
-    while (i > -1 && curShift[i] == 'z') {
+    while (i > -1 && curShift[i] == '_') {
         curShift[i] = 'a';
         i--;
     }
     if (i < 0) {
         curSize++;
-        char NewShift[curSize];
+        char *NewShift = allocstring(curSize);
         for (int j = 0; j < curSize; ++j) {
             NewShift[j] = 'a';
         }
         curShift = NewShift;
     } else {
-        curShift[i]++;
+        curShift[i] = next[curShift[i]];
     }
 }
 
@@ -43,11 +58,11 @@ void lex(int size, char *str) {
     curShift = allocstring(2);
     curShift[0] = 'a' - 1;
     curShift[1] = '\0';
+    curSize = 1;
     //
 
-    int curV = 0;
     for (int i = 0; i < size; ++i) {
-        curV = go(str[i]);
+        go(str[i]);
     }
 
     int sz = hashtable_size(lexems);
@@ -69,11 +84,12 @@ void lex(int size, char *str) {
         printf("%s ", vert[i].str);
         printf("%d\n", vert[i].count);
     }
-    curSize = 1;
+
     int *kek;
     for (int ind = itr - 2; ind > -1; ind--) {
         nextStringShift();
-        while (hashtable_get(lexems, &curShift, &kek) == CC_OK) {
+        while (hashtable_get(lexems, curShift, &kek) == CC_OK) {
+            printf("%s lexem\n", curShift);
             nextStringShift();
         }
         if (vert[ind].fx[curSize] > 0) {
@@ -88,8 +104,7 @@ void lex(int size, char *str) {
     }
     hashtable_iter_init(&iter, mapper);
     while (hashtable_iter_next(&iter, &cur) != CC_ITER_END) {
-        printf("%s ", cur->key);
-        printf("%s\n", cur->value);
+        printf("%s %s\n", cur->key, cur->value);
     }
 }
 
@@ -98,41 +113,40 @@ void lex(int size, char *str) {
  */
 void write(int size, char *str, char *filename) {
     build2();
-    bool hasTokens = false;
-    hasTokens = true;
 
     for (int i = 0; i < size; ++i) {
         go2(str[i]);
     }
     outFile[indf] = '\0';
-    printf("%s", outFile);
-    /*FILE *output = fopen(filename, "wt");
+    //printf("%s", outFile);
+    FILE *output = fopen(filename, "wt");
     if (hasTokens) {
         fprintf(output, "#include \"ALL_DEFINES.h\"\n");
-
-    }*/
+    }
+    fprintf(output, outFile);
+    fclose(output);
 }
 
 void writeHead() {
     /**
      * write defines to file
      */
-    FILE *head = fopen("ALL_DEFINES.h", "wt");
+    FILE *head = fopen("../ALL_DEFINES.h", "wt");
     HashTableIter *iter;
     hashtable_iter_init(iter, mapper);
     TableEntry *cur;
     while (hashtable_iter_next(iter, &cur) != CC_ITER_END) {
         fprintf(head, "#define ");
-        fprintf(head, cur->key);
-        fprintf(head, " ");
         fprintf(head, cur->value);
+        fprintf(head, " ");
+        fprintf(head, cur->key);
         fprintf(head, "\n");
     }
     fclose(head);
 }
 
 
-char *testFilename = "../main.c";
+char *testFilename = "../collections/hashtable.c";
 
 char *testFileOut = "../outmain.c";
 
@@ -146,6 +160,7 @@ void test() {
     fread(s, size + 1, 1, input);
     lex(size + 1, s);
     printf("%s", "---------------------------\n");
+    writeHead();
     write(size + 1, s, testFileOut);
 }
 
@@ -183,5 +198,6 @@ int main(int argsn, char *args[]) {
         hashtable_add(table, &lol, rand());
         hashtable_get(table, &lol, &val);
     }**/
+    destroyStrings();
     return 0;
 }

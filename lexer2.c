@@ -18,6 +18,8 @@ int curv = 0;
 int indf = 0;
 int ind0 = 0;
 
+bool hasTokens = false;
+
 void metadef();
 
 void adC() {
@@ -37,7 +39,6 @@ void siex() {
         adC();
         bufff[ind0] = '\0';
         metadef();
-        add();
     }
 }
 
@@ -58,6 +59,7 @@ void metadef() {
     char *def;
     enum cc_stat heh;
     if ((heh = hashtable_get(mapper, bufff, &def)) == CC_OK) {
+        hasTokens = true;
         for (int i = 0; def[i] != '\0'; ++i) {
             outFile[indf++] = def[i];
         }
