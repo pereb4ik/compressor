@@ -93,23 +93,7 @@ void sla() {
  * 9 [#]
  */
 
-int gov[13][10] = {
-        {0,  0,  1,  0,  0,  0,  6,  8,  10, 11}, // 0 start vertex
-        {0,  2,  4,  0,  0,  0,  0,  0,  0,  0}, // 1 comments start
-        {2,  3,  2,  2,  2,  2,  2,  2,  2,  2}, // 2 /* comments
-        {2,  3,  0,  2,  2,  2,  2,  2,  2,  2}, // 3 /* comments
-        {4,  4,  4,  0,  5,  4,  4,  4,  4,  4}, // 4 // comments
-        {4,  4,  4,  4,  5,  5,  4,  4,  4,  4}, // 5 // comments
-        {6,  6,  6,  6,  7,  6,  0,  6,  6,  6}, // 6 "" string
-        {6,  6,  6,  6,  6,  6,  6,  6,  6,  6}, // 7 "" string
-        {8,  8,  8,  8,  9,  8,  8,  0,  8,  8}, // 8 '' string
-        {8,  8,  8,  8,  8,  8,  8,  8,  8,  8}, // 9 '' string
-        {0,  0,  0,  0,  0,  0,  0,  0,  10, 0}, // 10 lexeme or number
-        {11, 11, 11, 0,  12, 11, 11, 11, 11, 11},// 11 # scipper
-        {11, 11, 11, 11, 12, 12, 11, 11, 11, 11} // 12 # scipper
-};
-
-void (*F[13][10])() = {
+void (*F[16][10])() = {
         {add,  add,  V,    add,  add,  add,  siex, siex, fiex, add},
         {sla,  V,    V,    sla,  sla,  sla,  sla,  sla,  sla,  sla},
         {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},
@@ -122,14 +106,17 @@ void (*F[13][10])() = {
         {adC,  adC,  adC,  adC,  adC,  adC,  adC,  adC,  adC,  adC},
         {fiex, fiex, fiex, fiex, fiex, fiex, fiex, fiex, adC,  fiex},
         {add,  add,  add,  add,  add,  add,  add,  add,  add,  add},
-        {add,  add,  add,  add,  add,  add,  add,  add,  add,  add}
+        {add,  add,  add,  add,  add,  add,  add,  add,  add,  add},
+        {V,    V,    V,    add,  V,    V,    V,    V,    V,    V},
+        {V,    V,    V,    V,    V,    add,  V,    V,    V,    V},
+        {V,    V,    V,    V,    V,    V,    V,    V,    V,    V}
 };
 
 int go2(char c) {
     Char = c;
     int e = class[128 + c];
     F[curv][e]();
-    curv = gov[curv][e];
+    curv = goV[curv][e];
     return curv;
 }
 

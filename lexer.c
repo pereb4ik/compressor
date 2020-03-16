@@ -140,8 +140,8 @@ void V() {
  * please, add space/tab scipper
  * maybe add EOF???
  */
-int goV[13][10] = {
-        {0,  0,  1,  0,  0,  0,  6,  8,  10, 11}, // 0 start vertex
+int goV[16][10] = {
+        {0,  0,  1,  14, 0,  13, 6,  8,  10, 11},// 0 start vertex
         {0,  2,  4,  0,  0,  0,  0,  0,  0,  0}, // 1 comments start
         {2,  3,  2,  2,  2,  2,  2,  2,  2,  2}, // 2 /* comments
         {2,  3,  0,  2,  2,  2,  2,  2,  2,  2}, // 3 /* comments
@@ -153,10 +153,13 @@ int goV[13][10] = {
         {8,  8,  8,  8,  8,  8,  8,  8,  8,  8}, // 9 '' string
         {0,  0,  0,  0,  0,  0,  0,  0,  10, 0}, // 10 lexeme or number
         {11, 11, 11, 0,  12, 11, 11, 11, 11, 11},// 11 # scipper
-        {11, 11, 11, 11, 12, 12, 11, 11, 11, 11} // 12 # scipper
+        {11, 11, 11, 11, 12, 12, 11, 11, 11, 11},// 12 # scipper
+        {0,  0,  0,  15, 0,  13, 0,  0,  0,  0}, // 13 [ \t] scipper
+        {0,  0,  0,  14, 0,  15, 0,  0,  0,  0}, // 14 [\n] scipper
+        {0,  0,  0,  15, 0,  15, 0,  0,  0,  0}, // 15 [ \t\n] scipper
 };
 
-void (*f[13][10])() = {
+void (*f[16][10])() = {
         {V,    V,    V,    V,    V,    V,    slex, slex, flex, V},
         {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},
         {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},
@@ -168,6 +171,9 @@ void (*f[13][10])() = {
         {addC, addC, addC, addC, addC, addC, addC, slex, addC, addC},
         {addC, addC, addC, addC, addC, addC, addC, addC, addC, addC},
         {flex, flex, flex, flex, flex, flex, flex, flex, addC, flex},
+        {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},
+        {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},
+        {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},
         {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},
         {V,    V,    V,    V,    V,    V,    V,    V,    V,    V}
 };

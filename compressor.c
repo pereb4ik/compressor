@@ -116,8 +116,6 @@ void lex(int size, char *str) {
  * Read, define and write
  */
 void write(int size, char *str, char *filename) {
-    build2();
-
     for (int i = 0; i < size; ++i) {
         go2(str[i]);
     }
@@ -156,6 +154,7 @@ char *testFilename = "../main.c";
 char *testFileOut = "../outmain.c";
 
 void test() {
+    build();
 
     FILE *input = fopen(testFilename, "rt");
     int size = fileSize(input);
@@ -171,7 +170,8 @@ void test() {
 
 int main(int argsn, char *args[]) {
     build();
-    
+    build2();
+
     printf("%s\n%s\n%s\n", args[0], args[1], args[2]);
     testFilename = args[1];
     testFileOut = args[2];
@@ -184,7 +184,7 @@ int main(int argsn, char *args[]) {
         FILE *input = fopen(args[i], "rt");
         int size = fileSize(input);
         sizes[i] = size;
-        files[i] = (char *) malloc((size + 1) * sizeof(char));
+        files[i] = allocstring(size + 1);
         fread(files[i], size + 1, 1, input);
         lex(size + 1, files[i]);
     }

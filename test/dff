@@ -1,3 +1,0 @@
-#!/bin/bash
-
-diff <(xxd b.out) <(xxd c.out)
