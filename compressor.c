@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <mach/boolean.h>
 #include "collections/hashtable.h"
 
 #include "lexer2.c"
@@ -57,6 +56,12 @@ void nextStringShift() {
  * Read and lex
  */
 void lex(int size, char *str) {
+    for (int i = 0; i < size; ++i) {
+        go(str[i]);
+    }
+}
+
+void calck() {
     //build curShift
 
     curShift = allocstring(2);
@@ -64,10 +69,6 @@ void lex(int size, char *str) {
     curShift[1] = '\0';
     curSize = 1;
     //
-
-    for (int i = 0; i < size; ++i) {
-        go(str[i]);
-    }
 
     int sz = hashtable_size(lexems);
     vertex vert[sz];
@@ -77,37 +78,34 @@ void lex(int size, char *str) {
     TableEntry *cur;
 
     while (hashtable_iter_next(&iter, &cur) != CC_ITER_END) {
-        int *key = cur->value;
-        vert[itr++] = *makeVert(cur->key, *key);
-        //printf("%s ", cur->key);
-        //printf("%d\n", *key);
+        int *val = cur->value;
+        vert[itr++] = *makeVert(cur->key, *val);
     }
 
     mergesort(vert, sz, sizeof(vertex), &compare);
-    for (int i = 0; i < itr - 1; ++i) {
-        printf("%s ", vert[i].str);
-        printf("%d\n", vert[i].count);
+
+    printf("iter %d size %d\n", itr, sz);
+
+    for (int i = 0; i < sz - 1; ++i) {
+        printf("%s %d\n", vert[i].str, vert[i].fx[0]);
     }
+
 
     int *kek;
     for (int ind = itr - 2; ind > -1; ind--) {
         nextStringShift();
         while (hashtable_get(lexems, curShift, &kek) == CC_OK) {
-            printf("%s lexem\n", curShift);
+            printf("%s :has\n", curShift);
             nextStringShift();
         }
-        if (vert[ind].fx[curSize] > 0) {
+        // ATTENTION, fx[a] is f(a + 1)
+        if (vert[ind].fx[curSize - 1] > 0) {
             char *cur = allocstring(curSize + 1);
             strcpy(cur, curShift);
             hashtable_add(mapper, vert[ind].str, cur);
-            //add define here
         } else {
             break;
         }
-    }
-    hashtable_iter_init(&iter, mapper);
-    while (hashtable_iter_next(&iter, &cur) != CC_ITER_END) {
-        printf("%s %s\n", cur->key, cur->value);
     }
 }
 
@@ -120,7 +118,6 @@ void write(int size, char *str, char *filename) {
         go2(str[i]);
     }
     outFile[indf] = '\0';
-    printf("%s\n", "kek");
     FILE *output = fopen(filename, "wt");
     if (hasTokens) {
         fprintf(output, "%s", "#include \"ALL_DEFINES.h\"\n");
@@ -130,20 +127,21 @@ void write(int size, char *str, char *filename) {
 }
 
 /**
- * write defines to file
- */
+  * write defines to file
+  */
 void writeHead() {
     if (hashtable_size(mapper) > 0) {
-        FILE *head = fopen("../ALL_DEFINES.h", "wt");
-        HashTableIter *iter;
+        printf("%d size of mapper\n", hashtable_size(mapper));
+        FILE *head = fopen("ALL_DEFINES.h", "wt");
+        HashTableIter iter;
         hashtable_iter_init(&iter, mapper);
         TableEntry *cur;
         while (hashtable_iter_next(&iter, &cur) != CC_ITER_END) {
-            fprintf(head, "%s", "#define ");
-            fprintf(head, "%s", cur->value);
-            fprintf(head, "%s", " ");
-            fprintf(head, "%s", cur->key);
-            fprintf(head, "%s", "\n");
+            fprintf(head, "#define ");
+            fprintf(head, cur->value);
+            fprintf(head, " ");
+            fprintf(head, cur->key);
+            fprintf(head, "\n");
         }
         fclose(head);
     }
@@ -151,36 +149,29 @@ void writeHead() {
 
 int main(int argsn, char *args[]) {
     build();
-    build2();
-    /*char *files[argsn];
+    char *files[argsn];
     int sizes[argsn];
+    int maxSize = 0;
 
     for (int i = 1; i < argsn; ++i) {
         FILE *input = fopen(args[i], "rt");
         int size = fileSize(input);
         sizes[i] = size;
+        maxSize = max(maxSize, size);
         files[i] = allocstring(size + 1);
         fread(files[i], size + 1, 1, input);
         fclose(input);
         lex(size + 1, files[i]);
-    }*/
-    char *filename = "../main2.c";
+    }
 
-    FILE *input = fopen(filename, "rt");
-    int size = fileSize(input);
-    char *s = allocstring(size + 1);
-    fread(s, size + 1, 1, input);
-    fclose(input);
-    lex(size + 1, s);
-
+    calck();
     writeHead();
+    build2(maxSize + 1);
 
-    write(size + 1, s, filename);
-    /*
     for (int i = 1; i < argsn; ++i) {
         write(sizes[i] + 1, files[i], args[i]);
     }
-     */
+
     destroyStrings();
     hashtable_destroy(mapper);
     hashtable_destroy(lexems);

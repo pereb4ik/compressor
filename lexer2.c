@@ -56,8 +56,7 @@ void fiex() {
 
 void metadef() {
     char *def;
-    enum cc_stat heh;
-    if ((heh = hashtable_get(mapper, bufff, &def)) == CC_OK) {
+    if (hashtable_get(mapper, bufff, &def) == CC_OK) {
         hasTokens = true;
         for (int i = 0; def[i] != '\0'; ++i) {
             outFile[indf++] = def[i];
@@ -67,7 +66,6 @@ void metadef() {
             outFile[indf++] = bufff[i];
         }
     }
-    printf("\"%s\" :String %d\n", bufff, heh);
 }
 
 void add() {
@@ -120,9 +118,9 @@ int go2(char c) {
     return curv;
 }
 
-void build2() {
-    bufff = allocstring(1000);
-    outFile = allocstring(10000);
+void build2(int size) {
+    bufff = allocstring(size);
+    outFile = allocstring(size);
 }
 
 #endif
