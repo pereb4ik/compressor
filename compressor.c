@@ -4,6 +4,7 @@
 #include "collections/hashtable.h"
 #include "collections/stack.h"
 
+#include "lexer2.c"
 
 #include "lexer.c"
 #include "utils.c"
@@ -85,13 +86,20 @@ void lex(int size, char *str) {
  * Read, define and write
  */
 void write(int size, char *str, char *filename) {
+    build2();
     bool hasTokens = false;
     hasTokens = true;
 
-    FILE *output = fopen(filename, "wt");
+    for (int i = 0; i < size; ++i) {
+        go2(str[i]);
+    }
+    outFile[indf] = '\0';
+    printf("%s", outFile);
+    /*FILE *output = fopen(filename, "wt");
     if (hasTokens) {
         fprintf(output, "#include \"ALL_DEFINES.h\"\n");
-    }
+
+    }*/
 }
 
 void writeHead() {
