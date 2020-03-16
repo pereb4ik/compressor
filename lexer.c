@@ -154,9 +154,9 @@ int goV[16][10] = {
         {0,  0,  0,  0,  0,  0,  0,  0,  10, 0}, // 10 lexeme or number
         {11, 11, 11, 0,  12, 11, 11, 11, 11, 11},// 11 # scipper
         {11, 11, 11, 11, 12, 12, 11, 11, 11, 11},// 12 # scipper
-        {0,  0,  0,  15, 0,  13, 0,  0,  0,  0}, // 13 [ \t] scipper
-        {0,  0,  0,  14, 0,  15, 0,  0,  0,  0}, // 14 [\n] scipper
-        {0,  0,  0,  15, 0,  15, 0,  0,  0,  0}, // 15 [ \t\n] scipper
+        {0,  0,  1,  15, 0,  13, 6,  8,  10, 11}, // 13 [ \t] scipper
+        {0,  0,  1,  14, 0,  15, 6,  8,  10, 11}, // 14 [\n] scipper
+        {0,  0,  1,  15, 0,  15, 6,  8,  10, 11} // 15 [ \t\n] scipper
 };
 
 void (*f[16][10])() = {
@@ -173,9 +173,9 @@ void (*f[16][10])() = {
         {flex, flex, flex, flex, flex, flex, flex, flex, addC, flex},
         {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},
         {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},
-        {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},
-        {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},
-        {V,    V,    V,    V,    V,    V,    V,    V,    V,    V}
+        {V,    V,    V,    V,    V,    V,    slex, slex, flex, V},
+        {V,    V,    V,    V,    V,    V,    slex, slex, flex, V},
+        {V,    V,    V,    V,    V,    V,    slex, slex, flex, V}
 };
 
 int go(char c) {

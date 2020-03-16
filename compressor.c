@@ -80,9 +80,15 @@ void lex(int size, char *str) {
     while (hashtable_iter_next(&iter, &cur) != CC_ITER_END) {
         int *key = cur->value;
         vert[itr++] = *makeVert(cur->key, *key);
+        //printf("%s ", cur->key);
+        //printf("%d\n", *key);
     }
 
     mergesort(vert, sz, sizeof(vertex), &compare);
+    for (int i = 0; i < itr - 1; ++i) {
+        printf("%s ", vert[i].str);
+        printf("%d\n", vert[i].count);
+    }
 
     int *kek;
     for (int ind = itr - 2; ind > -1; ind--) {
@@ -110,6 +116,7 @@ void lex(int size, char *str) {
  * Read, define and write
  */
 void write(int size, char *str, char *filename) {
+    indf = 0;
     for (int i = 0; i < size; ++i) {
         go2(str[i]);
     }
@@ -133,21 +140,44 @@ void writeHead() {
         hashtable_iter_init(iter, mapper);
         TableEntry *cur;
         while (hashtable_iter_next(iter, &cur) != CC_ITER_END) {
-            fprintf(head, "#define ");
-            fprintf(head, cur->value);
-            fprintf(head, " ");
-            fprintf(head, cur->key);
-            fprintf(head, "\n");
+            fprintf(head, "%s", "#define ");
+            fprintf(head, "%s", cur->value);
+            fprintf(head, "%s", " ");
+            fprintf(head, "%s", cur->key);
+            fprintf(head, "%s", "\n");
         }
         fclose(head);
     }
+}
+
+char *testFilename = "../main.c";
+
+char *testFileOut = "../outmain.c";
+
+void test() {
+
+    FILE *input = fopen(testFilename, "rt");
+    int size = fileSize(input);
+
+    char *s = allocstring(size + 1);
+    fread(s, size + 1, 1, input);
+    fclose(input);
+    lex(size + 1, s);
+    printf("%s", "---------------------------\n");
+    writeHead();
+    write(size + 1, s, testFileOut);
 }
 
 int main(int argsn, char *args[]) {
     build();
     build2();
 
-    char *files[argsn];
+    printf("%s\n%s\n%s\n", args[0], args[1], args[2]);
+    testFilename = args[1];
+    testFileOut = args[2];
+    test();
+
+    /*char *files[argsn];
     int sizes[argsn];
 
     for (int i = 0; i < argsn; ++i) {
@@ -163,7 +193,21 @@ int main(int argsn, char *args[]) {
 
     for (int i = 0; i < argsn; ++i) {
         write(sizes[i] + 1, files[i], args[i]);
-    }
+    }*/
+
+
+    /**HashTable *table;
+    //hashtable_new(&table);
+    HashTableConf cnf;
+    hashtable_conf_init(&cnf);
+    cnf.initial_capacity = 20000000;
+    hashtable_new_conf(&cnf, &table);
+    for (int i = 0; i < 10000000; ++i) {
+        char *lol = randString();
+        int val;
+        hashtable_add(table, &lol, rand());
+        hashtable_get(table, &lol, &val);
+    }**/
     destroyStrings();
     hashtable_destroy(mapper);
     hashtable_destroy(lexems);
