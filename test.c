@@ -6,7 +6,6 @@
 int curSize;
 char *curShift;
 
-
 void nextStringShift() {
     static int first = 1;
     static char next[256];
@@ -19,7 +18,11 @@ void nextStringShift() {
         for (char c = 'A'; c < 'Z'; ++c) {
             next[c] = c + 1;
         }
-        next['Z'] = '_';
+        next['Z'] = '0';
+        for (char c = '0'; c < '9'; ++c) {
+            next[c] = c + 1;
+        }
+        next['9'] = '_';
         next['a' - 1] = 'a';
     }
 
@@ -36,7 +39,11 @@ void nextStringShift() {
         }
         curShift = NewShift;
     } else {
-        curShift[i] = next[curShift[i]];
+        if (i == 0 && curShift[i] == 'Z') {
+            curShift[i] = '_';
+        } else {
+            curShift[i] = next[curShift[i]];
+        }
     }
 }
 
