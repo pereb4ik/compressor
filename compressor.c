@@ -12,9 +12,6 @@
 int curSize;
 char *curShift;
 
-/**
- * OK, now there no 0-9
- */
 void nextStringShift() {
     static int first = 1;
     static char next[256];
@@ -130,7 +127,7 @@ void write(int size, char *str, char *filename) {
     if (hasTokens) {
         fprintf(output, "#include \"ALL_DEFINES.h\"\n");
     }
-    fprintf(output, outFile);
+    fprintf(output, "%s", outFile);
     fclose(output);
 }
 
@@ -138,22 +135,23 @@ void writeHead() {
     /**
      * write defines to file
      */
-    FILE *head = fopen("../ALL_DEFINES.h", "wt");
-    HashTableIter *iter;
-    hashtable_iter_init(iter, mapper);
-    TableEntry *cur;
-    while (hashtable_iter_next(iter, &cur) != CC_ITER_END) {
-        fprintf(head, "#define ");
-        fprintf(head, cur->value);
-        fprintf(head, " ");
-        fprintf(head, cur->key);
-        fprintf(head, "\n");
+    if (hashtable_size(mapper) > 0) {
+        FILE *head = fopen("ALL_DEFINES.h", "wt");
+        HashTableIter *iter;
+        hashtable_iter_init(iter, mapper);
+        TableEntry *cur;
+        while (hashtable_iter_next(iter, &cur) != CC_ITER_END) {
+            fprintf(head, "#define ");
+            fprintf(head, cur->value);
+            fprintf(head, " ");
+            fprintf(head, cur->key);
+            fprintf(head, "\n");
+        }
+        fclose(head);
     }
-    fclose(head);
 }
 
-
-char *testFilename = "../kek.txt";
+char *testFilename = "../main.c";
 
 char *testFileOut = "../outmain.c";
 
@@ -163,8 +161,9 @@ void test() {
     FILE *input = fopen(testFilename, "rt");
     int size = fileSize(input);
 
-    char *s = (char *) malloc((size + 1) * sizeof(char));
+    char *s = allocstring(size + 1);
     fread(s, size + 1, 1, input);
+    fclose(input);
     lex(size + 1, s);
     printf("%s", "---------------------------\n");
     writeHead();
@@ -172,6 +171,9 @@ void test() {
 }
 
 int main(int argsn, char *args[]) {
+    printf("%s\n%s\n%s\n", args[0], args[1], args[2]);
+    testFilename = args[1];
+    testFileOut = args[2];
     test();
 
     /*char *files[argsn];

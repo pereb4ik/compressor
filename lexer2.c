@@ -26,7 +26,6 @@ void adC() {
     bufff[ind0++] = Char;
 }
 
-
 void add();
 
 void siex() {
@@ -64,7 +63,7 @@ void metadef() {
             outFile[indf++] = def[i];
         }
     } else {
-        for (int i = 0; i < ind0; ++i) {
+        for (int i = 0; bufff[i] != '\0'; ++i) {
             outFile[indf++] = bufff[i];
         }
     }
