@@ -116,6 +116,7 @@ void lex(int size, char *str) {
  * Read, define and write
  */
 void write(int size, char *str, char *filename) {
+    indf = 0;
     for (int i = 0; i < size; ++i) {
         go2(str[i]);
     }
@@ -139,11 +140,11 @@ void writeHead() {
         hashtable_iter_init(iter, mapper);
         TableEntry *cur;
         while (hashtable_iter_next(iter, &cur) != CC_ITER_END) {
-            fprintf(head, "#define ");
-            fprintf(head, cur->value);
-            fprintf(head, " ");
-            fprintf(head, cur->key);
-            fprintf(head, "\n");
+            fprintf(head, "%s", "#define ");
+            fprintf(head, "%s", cur->value);
+            fprintf(head, "%s", " ");
+            fprintf(head, "%s", cur->key);
+            fprintf(head, "%s", "\n");
         }
         fclose(head);
     }
@@ -171,9 +172,9 @@ int main(int argsn, char *args[]) {
     build();
     build2();
 
-    //printf("%s\n%s\n%s\n", args[0], args[1], args[2]);
-    //testFilename = args[1];
-    //testFileOut = args[2];
+    printf("%s\n%s\n%s\n", args[0], args[1], args[2]);
+    testFilename = args[1];
+    testFileOut = args[2];
     test();
 
     /*char *files[argsn];

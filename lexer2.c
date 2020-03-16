@@ -107,9 +107,9 @@ void (*F[16][10])() = {
         {fiex, fiex, fiex, fiex, fiex, fiex, fiex, fiex, adC,  fiex},
         {add,  add,  add,  add,  add,  add,  add,  add,  add,  add},
         {add,  add,  add,  add,  add,  add,  add,  add,  add,  add},
-        {V,    V,    V,    add,  V,    V,    V,    V,    V,    V},
-        {V,    V,    V,    V,    V,    add,  V,    V,    V,    V},
-        {V,    V,    V,    V,    V,    V,    V,    V,    V,    V}
+        {add,  add,  V,    add,  add,  V,    siex, siex, fiex, add},
+        {add,  add,  V,    V,    add,  add,  siex, siex, fiex, add},
+        {add,  add,  V,    V,    add,  V,    siex, siex, fiex, add}
 };
 
 int go2(char c) {
