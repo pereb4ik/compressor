@@ -84,7 +84,6 @@ void lex(int size, char *str) {
 
     mergesort(vert, sz, sizeof(vertex), &compare);
 
-    curSize = 1;
     int *kek;
     for (int ind = itr - 2; ind > -1; ind--) {
         nextStringShift();
