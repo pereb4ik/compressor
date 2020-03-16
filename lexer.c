@@ -80,7 +80,6 @@ void addC() {
 }
 
 void startLexem() {
-    // you should free this space
     buff = allocstring(1000);
     ind = 0;
 }
@@ -183,7 +182,6 @@ int go(char c) {
     int e = class[128 + c];
     f[curV][e]();
     curV = goV[curV][e];
-    //printf("%d\n", curV);
     return curV;
 }
 

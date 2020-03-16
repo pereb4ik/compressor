@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <mach/boolean.h>
 #include "collections/hashtable.h"
-#include "collections/stack.h"
 
 #include "lexer2.c"
 
@@ -121,19 +120,18 @@ void write(int size, char *str, char *filename) {
         go2(str[i]);
     }
     outFile[indf] = '\0';
-    //printf("%s", outFile);
     FILE *output = fopen(filename, "wt");
     if (hasTokens) {
-        fprintf(output, "#include \"ALL_DEFINES.h\"\n");
+        fprintf(output, "%s", "#include \"ALL_DEFINES.h\"\n");
     }
     fprintf(output, "%s", outFile);
     fclose(output);
 }
 
+/**
+ * write defines to file
+ */
 void writeHead() {
-    /**
-     * write defines to file
-     */
     if (hashtable_size(mapper) > 0) {
         FILE *head = fopen("ALL_DEFINES.h", "wt");
         HashTableIter *iter;
@@ -150,64 +148,28 @@ void writeHead() {
     }
 }
 
-char *testFilename = "../main.c";
-
-char *testFileOut = "../outmain.c";
-
-void test() {
-
-    FILE *input = fopen(testFilename, "rt");
-    int size = fileSize(input);
-
-    char *s = allocstring(size + 1);
-    fread(s, size + 1, 1, input);
-    fclose(input);
-    lex(size + 1, s);
-    printf("%s", "---------------------------\n");
-    writeHead();
-    write(size + 1, s, testFileOut);
-}
-
 int main(int argsn, char *args[]) {
     build();
     build2();
-
-    printf("%s\n%s\n%s\n", args[0], args[1], args[2]);
-    testFilename = args[1];
-    testFileOut = args[2];
-    test();
-
-    /*char *files[argsn];
+    char *files[argsn];
     int sizes[argsn];
 
-    for (int i = 0; i < argsn; ++i) {
+    for (int i = 1; i < argsn; ++i) {
         FILE *input = fopen(args[i], "rt");
         int size = fileSize(input);
         sizes[i] = size;
         files[i] = allocstring(size + 1);
         fread(files[i], size + 1, 1, input);
+        fclose(input);
         lex(size + 1, files[i]);
     }
 
     writeHead();
 
-    for (int i = 0; i < argsn; ++i) {
+    for (int i = 1; i < argsn; ++i) {
         write(sizes[i] + 1, files[i], args[i]);
-    }*/
+    }
 
-
-    /**HashTable *table;
-    //hashtable_new(&table);
-    HashTableConf cnf;
-    hashtable_conf_init(&cnf);
-    cnf.initial_capacity = 20000000;
-    hashtable_new_conf(&cnf, &table);
-    for (int i = 0; i < 10000000; ++i) {
-        char *lol = randString();
-        int val;
-        hashtable_add(table, &lol, rand());
-        hashtable_get(table, &lol, &val);
-    }**/
     destroyStrings();
     hashtable_destroy(mapper);
     hashtable_destroy(lexems);
