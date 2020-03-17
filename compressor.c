@@ -119,7 +119,7 @@ void write(int size, char *str, char *filename) {
 }
 
 /**
-  * write defines to file
+  * Write defines to file
   */
 void writeHead() {
     if (hashtable_size(mapper) > 0) {
