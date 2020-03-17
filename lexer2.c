@@ -125,6 +125,11 @@ int go2(char c) {
     return curV;
 }
 
+
+/**
+ * Build bufff and outfile by size
+ */
+
 void build2(int size) {
     bufff = allocstring(size);
     outFile = allocstring(size);

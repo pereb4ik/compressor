@@ -27,20 +27,19 @@ void nextStringShift() {
             next[c] = c + 1;
         }
         next['9'] = '_';
-        next['a' - 1] = 'a';
     }
 
-    int i = curSize - 1;
-    while (i > -1 && curShift[i] == '_') {
+    int i;
+    for (i = curSize - 1; i > -1 && curShift[i] == '_'; --i) {
         curShift[i] = 'a';
-        i--;
     }
     if (i < 0) {
         curSize++;
-        char *NewShift = allocstring(curSize);
+        char *NewShift = allocstring(curSize + 1);
         for (int j = 0; j < curSize; ++j) {
             NewShift[j] = 'a';
         }
+        NewShift[curSize] = '\0';
         curShift = NewShift;
     } else {
         if (i == 0 && curShift[i] == 'Z') {
@@ -52,8 +51,7 @@ void nextStringShift() {
 }
 
 /*
- * // First read
- * Read and lex
+ * First lex
  */
 void lex(int size, char *str) {
     for (int i = 0; i < size; ++i) {
@@ -70,8 +68,8 @@ void calck() {
     curSize = 1;
     //
 
-    int sz = hashtable_size(lexems);
-    vertex *vert[sz];
+    int hsize = hashtable_size(lexems);
+    vertex *vert[hsize];
     HashTableIter iter;
     hashtable_iter_init(&iter, lexems);
     TableEntry *cur;
@@ -82,14 +80,10 @@ void calck() {
         vert[i] = makeVert(cur->key, *val);
     }
 
-    mergesort(vert, sz, sizeof(vertex *), &compare);
-
-    /*for (int i = 0; i < sz; ++i) {
-        printf("%s %d\n", vert[i]->str, vert[i]->fx[0]);
-    }*/
+    mergesort(vert, hsize, sizeof(vertex *), &compare);
 
     int *kek;
-    for (int i = sz - 1; i > -1; i--) {
+    for (int i = hsize - 1; i > -1; i--) {
         while (hashtable_get(lexems, curShift, &kek) == CC_OK) {
             printf("%s :has\n", curShift);
             nextStringShift();
@@ -97,7 +91,6 @@ void calck() {
         // ATTENTION, fx[a] is f(a + 1)
         if (vert[i]->fx[curSize - 1] > 0) {
             char *cur = allocstring(curSize + 1);
-            cur[0] = '\0';
             strcpy(cur, curShift);
             hashtable_add(mapper, vert[i]->str, cur);
         } else {

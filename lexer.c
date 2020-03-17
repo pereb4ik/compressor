@@ -6,32 +6,6 @@
 #ifndef BEST_LEXER_C
 #define BEST_LEXER_C
 
-vertex *makeVert(char *str, long count) {
-    //printf("%s %ld new vert\n", str, count);
-    vertex *p = allocvert();
-    p->count = count;
-    p->str = str;
-    int len = strlen(str);
-    p->len = len;
-    for (int i = 0; i < NumOfSamples; ++i) {
-        p->fx[i] = count * (len - (i + 1)) - (10 + len + (i + 1));
-    }
-    return p;
-}
-
-int compare(vertex **a, vertex **b) {
-    for (int i = 0; i < NumOfSamples; ++i) {
-        if ((*a)->fx[i] < (*b)->fx[i]) {
-            return -1;
-        } else {
-            if ((*a)->fx[i] > (*b)->fx[i]) {
-                return 1;
-            }
-        }
-    }
-    return 0;
-}
-
 int class[256];
 
 int curV = 0;
@@ -39,7 +13,6 @@ int curV = 0;
 HashTable *lexems;
 
 HashTable *mapper;
-
 
 /**
  * transition functions
@@ -105,8 +78,6 @@ void flex() {
 void V() {
 
 }
-
-
 //////////////////
 
 /**
@@ -124,6 +95,7 @@ void V() {
 
 /**
  * please, add space/tab scipper
+ * is this correct?
  */
 int goV[16][10] = {
         {0,  0,  1,  14, 0,  13, 6,  8,  10, 11},// 0 start vertex
@@ -173,9 +145,8 @@ int go(char c) {
 
 /**
  * Build 'lexems' hashtable,
- *       class mapper,
- *       'mapper' hashtable
- *
+ *       'mapper' hashtable,
+ *       class mapper
  */
 
 void build() {
@@ -207,10 +178,6 @@ void build() {
     class[128 + '_'] = 8;
     class[128 + '#'] = 9;
 
-
-    goV[0][2] = 1;
-    goV[1][1] = 2;
-    goV[2][1] = 3;
 }
 
 #endif

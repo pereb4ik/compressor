@@ -53,4 +53,29 @@ int max(int a, int b) {
     return b;
 }
 
+vertex *makeVert(char *str, long count) {
+    vertex *p = allocvert();
+    p->count = count;
+    p->str = str;
+    int len = strlen(str);
+    p->len = len;
+    for (int i = 0; i < NumOfSamples; ++i) {
+        p->fx[i] = count * (len - (i + 1)) - (10 + len + (i + 1));
+    }
+    return p;
+}
+
+int compare(vertex **a, vertex **b) {
+    for (int i = 0; i < NumOfSamples; ++i) {
+        if ((*a)->fx[i] < (*b)->fx[i]) {
+            return -1;
+        } else {
+            if ((*a)->fx[i] > (*b)->fx[i]) {
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
 #endif
