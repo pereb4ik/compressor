@@ -172,7 +172,8 @@ int main(int argsn, char *args[]) {
         write(sizes[i] + 1, files[i], args[i]);
     }
 
-    destroyStrings();
+    //destroy all
+    freeSpace();
     hashtable_destroy(mapper);
     hashtable_destroy(lexems);
     return 0;

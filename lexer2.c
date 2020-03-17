@@ -8,8 +8,6 @@
 #ifndef BEST_LEXER2_C
 #define BEST_LEXER2_C
 
-char Char;
-
 char *bufff;
 
 char *outFile;
@@ -22,7 +20,7 @@ bool hasTokens = false;
 void metadef();
 
 void adC() {
-    bufff[ind0++] = Char;
+    bufff[ind0++] = curChar;
 }
 
 void add();
@@ -68,7 +66,7 @@ void metadef() {
 }
 
 void add() {
-    outFile[indf++] = Char;
+    outFile[indf++] = curChar;
 }
 
 //print slash, crutch
@@ -120,7 +118,7 @@ void (*F[16][10])() = {
 };
 
 int go2(char c) {
-    Char = c;
+    curChar = c;
     int e = class[128 + c];
     F[curV][e]();
     curV = goV[curV][e];

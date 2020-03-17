@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define long long long
+
 #ifndef BEST_UTILS_C
 #define BEST_UTILS_C
-
 
 const int NumOfSamples = 5;
 
@@ -21,39 +22,35 @@ int fileSize(FILE *f) {
     return size;
 }
 
-void *ALL_ALLOCATED_STRINGS[100000];
+void *ALL_ALLOCATED[100000];
 int INDEX_ALL = 0;
 
 char *allocstring(int size) {
-    ALL_ALLOCATED_STRINGS[INDEX_ALL] = (char *) (malloc(sizeof(char) * (size)));
-    return ALL_ALLOCATED_STRINGS[INDEX_ALL++];
+    ALL_ALLOCATED[INDEX_ALL] = (char *) (malloc(sizeof(char) * size));
+    return ALL_ALLOCATED[INDEX_ALL++];
 }
 
 int *allocint() {
-    ALL_ALLOCATED_STRINGS[INDEX_ALL] = (int *) (malloc(sizeof(int)));
-    return ALL_ALLOCATED_STRINGS[INDEX_ALL++];
-
+    ALL_ALLOCATED[INDEX_ALL] = (int *) (malloc(sizeof(int)));
+    return ALL_ALLOCATED[INDEX_ALL++];
 }
-
-void destroyStrings() {
-    INDEX_ALL++;
-    for (int i = 0; i < INDEX_ALL; ++i) {
-        free(ALL_ALLOCATED_STRINGS[i]);
-    }
-}
-
 
 vertex *allocvert() {
-    ALL_ALLOCATED_STRINGS[INDEX_ALL] = (vertex *) (malloc(sizeof(vertex)));
-    return ALL_ALLOCATED_STRINGS[INDEX_ALL++];
+    ALL_ALLOCATED[INDEX_ALL] = (vertex *) (malloc(sizeof(vertex)));
+    return ALL_ALLOCATED[INDEX_ALL++];
+}
+
+void freeSpace() {
+    for (int i = 0; i < INDEX_ALL; ++i) {
+        free(ALL_ALLOCATED[i]);
+    }
 }
 
 int max(int a, int b) {
     if (a > b) {
         return a;
-    } else {
-        return b;
     }
+    return b;
 }
 
 #endif

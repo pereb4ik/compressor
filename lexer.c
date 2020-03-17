@@ -6,9 +6,6 @@
 #ifndef BEST_LEXER_C
 #define BEST_LEXER_C
 
-
-#define long long long
-
 vertex *makeVert(char *str, long count) {
     //printf("%s %ld new vert\n", str, count);
     vertex *p = allocvert();
@@ -34,7 +31,6 @@ int compare(vertex **a, vertex **b) {
     }
     return 0;
 }
-
 
 int class[256];
 
