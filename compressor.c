@@ -163,12 +163,12 @@ int main(int argsn, char *args[]) {
     }
 
     calck();
-    writeHead();
     build2(maxSize + 1);
 
     for (int i = 1; i < argsn; ++i) {
         write(sizes[i] + 1, files[i], args[i]);
     }
+    writeHead();
 
     //destroy all
     freeSpace();
