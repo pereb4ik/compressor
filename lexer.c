@@ -6,12 +6,17 @@
 #ifndef BEST_LEXER_C
 #define BEST_LEXER_C
 
+//class of character
 int class[256];
 
 int curV = 0;
 
 HashTable *lexems;
 HashTable *mapper;
+
+char *buff;
+char curChar;
+int ind;
 
 /**
  * transition functions
@@ -28,10 +33,7 @@ void countLexeme(char *token) {
     hashtable_add(lexems, token, count);
 }
 
-char *buff;
-char curChar;
-int ind;
-
+//add char to buff(of lexem)
 void addC() {
     buff[ind++] = curChar;
 }
@@ -43,8 +45,9 @@ void startLexem() {
     ind = 0;
 }
 
-//fuck yeah string lex
+//yeah string lex
 //copypaste of flex
+//start/end string const
 void slex() {
     static int even = 0;
     even = 1 - even;
@@ -58,7 +61,8 @@ void slex() {
     }
 }
 
-//fuck yeah lex
+//yeah, lex
+//start/end lexeme
 void flex() {
     static int even = 0;
     even = 1 - even;
@@ -90,10 +94,6 @@ void V() {
  * 9 [#]
  */
 
-/**
- * please, add space/tab scipper
- * is this correct?
- */
 int goV[16][10] = {
         {0,  0,  1,  14, 0,  13, 6,  8,  10, 11},// 0 start vertex
         {0,  2,  4,  14, 0,  13, 6,  8,  10, 11},// 1 comments start

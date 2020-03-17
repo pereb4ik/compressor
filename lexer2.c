@@ -20,43 +20,48 @@ int indf = 0;
 
 bool hasTokens;
 
-void metadef();
+void definer();
 
+//add char to bufff
 void adC() {
     bufff[ind++] = curChar;
 }
 
+//add char to file
 void add();
 
+//start/end string const
 void siex() {
-    static int even = 1;
+    static int even = 0;
     even = 1 - even;
-    if (even == 0) {
+    if (even) {
         ind = 0;
         adC();
     } else {
         adC();
         bufff[ind] = '\0';
-        metadef();
+        definer();
     }
 }
 
+//start/end lexeme
 void fiex() {
-    static int even = 1;
+    static int even = 0;
     even = 1 - even;
-    if (even == 0) {
+    if (even) {
         ind = 0;
         adC();
     } else {
         bufff[ind] = '\0';
-        metadef();
+        definer();
         if (curChar != '/') {
             outFile[indf++] = curChar;
         }
     }
 }
 
-void metadef() {
+//define(or not) lexeme by mapper
+void definer() {
     char *def;
     if (hashtable_get(mapper, bufff, &def) == CC_OK) {
         hasTokens = true;
@@ -80,11 +85,13 @@ void pla() {
     add();
 }
 
+//slash before string
 void sla() {
     outFile[indf++] = '/';
     siex();
 }
 
+//slash before lexem
 void fla() {
     outFile[indf++] = '/';
     fiex();
@@ -135,11 +142,9 @@ int go2(char c) {
     return curV;
 }
 
-
 /**
  * Build bufff and outfile by size
  */
-
 void build2(int size) {
     ind = 0;
     bufff = allocstring(size);

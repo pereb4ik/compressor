@@ -11,10 +11,10 @@ int curSize;
 char *curShift;
 
 void nextStringShift() {
-    static int first = 1;
+    static int firstRun = 1;
     static char next[256];
-    if (first) {
-        first = 0;
+    if (firstRun) {
+        firstRun = 0;
         for (char c = 'a'; c < 'z'; ++c) {
             next[c] = c + 1;
         }
@@ -80,9 +80,9 @@ void calck() {
 
     mergesort(vert, hsize, sizeof(vertex *), &compare);
 
-    int *kek;
+    int *trash;
     for (int i = hsize - 1; i > -1; i--) {
-        while (hashtable_get(lexems, curShift, &kek) == CC_OK) {
+        while (hashtable_get(lexems, curShift, &trash) == CC_OK) {
             nextStringShift();
         }
         // ATTENTION, fx[a] is f(a + 1)
@@ -165,12 +165,14 @@ int main(int argsn, char *args[]) {
     for (int i = 1; i < argsn; ++i) {
         write(sizes[i] + 1, files[i], args[i]);
     }
+    
     writeHead();
 
     //destroy all
     freeSpace();
     hashtable_destroy(mapper);
     hashtable_destroy(lexems);
+
     printf("%s", "You should add ALL_DEFINES.h to includes of compiler\n");
     return EXIT_SUCCESS;
 }
