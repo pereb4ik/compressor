@@ -57,6 +57,7 @@ void lex(int size, char *str) {
     for (int i = 0; i < size; ++i) {
         go(str[i]);
     }
+    printf("%d last char\n", (int) (str[size]));
     printf("%d last v\n", curV);
 }
 
@@ -124,17 +125,17 @@ void write(int size, char *str, char *filename) {
   */
 void writeHead() {
     if (hashtable_size(mapper) > 0) {
-        printf("%d size of mapper\n", hashtable_size(mapper));
+        printf("%lu size of mapper\n", hashtable_size(mapper));
         FILE *head = fopen("ALL_DEFINES.h", "wt");
         HashTableIter iter;
         hashtable_iter_init(&iter, mapper);
         TableEntry *cur;
         while (hashtable_iter_next(&iter, &cur) != CC_ITER_END) {
-            fprintf(head, "#define ");
-            fprintf(head, cur->value);
-            fprintf(head, " ");
-            fprintf(head, cur->key);
-            fprintf(head, "\n");
+            fprintf(head, "%s", "#define ");
+            fprintf(head, "%s", cur->value);
+            fprintf(head, "%s", " ");
+            fprintf(head, "%s", cur->key);
+            fprintf(head, "%s", "\n");
         }
         fclose(head);
     }

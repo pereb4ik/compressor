@@ -46,9 +46,9 @@ void startLexem() {
 //fuck yeah string lex
 //copypaste of flex
 void slex() {
-    static int even = 1;
+    static int even = 0;
     even = 1 - even;
-    if (even == 0) {
+    if (even) {
         startLexem();
         addC();
     } else {
@@ -60,9 +60,9 @@ void slex() {
 
 //fuck yeah lex
 void flex() {
-    static int even = 1;
+    static int even = 0;
     even = 1 - even;
-    if (even == 0) {
+    if (even) {
         startLexem();
         addC();
     } else {
@@ -70,7 +70,6 @@ void flex() {
         countLexeme(buff);
     }
 }
-
 
 //void function
 void V() {
@@ -82,7 +81,7 @@ void V() {
  * 0 - all
  * 1 [*]
  * 2 [/]
- * 3 [\n]
+ * 3 [\n\0\r]
  * 4 [\]
  * 5 [ \t]
  * 6 ["]
@@ -97,40 +96,40 @@ void V() {
  */
 int goV[16][10] = {
         {0,  0,  1,  14, 0,  13, 6,  8,  10, 11},// 0 start vertex
-        {0,  2,  4,  14, 0,  13, 6,  8,  10, 11}, // 1 comments start
+        {0,  2,  4,  14, 0,  13, 6,  8,  10, 11},// 1 comments start
         {2,  3,  2,  2,  2,  2,  2,  2,  2,  2}, // 2 /* comments
         {2,  3,  0,  2,  2,  2,  2,  2,  2,  2}, // 3 /* comments
-        {4,  4,  4,  0,  5,  4,  4,  4,  4,  4}, // 4 // comments
+        {4,  4,  4,  14, 5,  4,  4,  4,  4,  4}, // 4 // comments
         {4,  4,  4,  4,  5,  5,  4,  4,  4,  4}, // 5 // comments
         {6,  6,  6,  6,  7,  6,  0,  6,  6,  6}, // 6 "" string
         {6,  6,  6,  6,  6,  6,  6,  6,  6,  6}, // 7 "" string
         {8,  8,  8,  8,  9,  8,  8,  0,  8,  8}, // 8 '' string
         {8,  8,  8,  8,  8,  8,  8,  8,  8,  8}, // 9 '' string
-        {0,  0,  0,  0,  0,  0,  0,  0,  10, 0}, // 10 lexeme or number
-        {11, 11, 11, 0,  12, 11, 11, 11, 11, 11},// 11 # scipper
+        {0,  0,  1,  14, 0,  13, 0,  0,  10, 0}, // 10 lexeme or number
+        {11, 11, 11, 14, 12, 11, 11, 11, 11, 11},// 11 # scipper
         {11, 11, 11, 11, 12, 12, 11, 11, 11, 11},// 12 # scipper
-        {0,  0,  1,  15, 0,  13, 6,  8,  10, 11}, // 13 [ \t] scipper
-        {0,  0,  1,  14, 0,  15, 6,  8,  10, 11}, // 14 [\n] scipper
+        {0,  0,  1,  15, 0,  13, 6,  8,  10, 11},// 13 [ \t] scipper
+        {0,  0,  1,  14, 0,  15, 6,  8,  10, 11},// 14 [\n] scipper
         {0,  0,  1,  15, 0,  15, 6,  8,  10, 11} // 15 [ \t\n] scipper
 };
 
 void (*f[16][10])() = {
-        {V,    V,    V,    V,    V,    V,    slex, slex, flex, V},
-        {V,    V,    V,    V,    V,    V,    slex, slex, flex, V},
-        {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},
-        {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},
-        {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},
-        {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},
-        {addC, addC, addC, addC, addC, addC, slex, addC, addC, addC},
-        {addC, addC, addC, addC, addC, addC, addC, addC, addC, addC},
-        {addC, addC, addC, addC, addC, addC, addC, slex, addC, addC},
-        {addC, addC, addC, addC, addC, addC, addC, addC, addC, addC},
-        {flex, flex, flex, flex, flex, flex, flex, flex, addC, flex},
-        {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},
-        {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},
-        {V,    V,    V,    V,    V,    V,    slex, slex, flex, V},
-        {V,    V,    V,    V,    V,    V,    slex, slex, flex, V},
-        {V,    V,    V,    V,    V,    V,    slex, slex, flex, V}
+        {V,    V,    V,    V,    V,    V,    slex, slex, flex, V},   // 0
+        {V,    V,    V,    V,    V,    V,    slex, slex, flex, V},   // 1
+        {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},   // 2
+        {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},   // 3
+        {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},   // 4
+        {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},   // 5
+        {addC, addC, addC, addC, addC, addC, slex, addC, addC, addC},// 6
+        {addC, addC, addC, addC, addC, addC, addC, addC, addC, addC},// 7
+        {addC, addC, addC, addC, addC, addC, addC, slex, addC, addC},// 8
+        {addC, addC, addC, addC, addC, addC, addC, addC, addC, addC},// 9
+        {flex, flex, flex, flex, flex, flex, flex, flex, addC, flex},// 10
+        {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},   // 11
+        {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},   // 12
+        {V,    V,    V,    V,    V,    V,    slex, slex, flex, V},   // 13
+        {V,    V,    V,    V,    V,    V,    slex, slex, flex, V},   // 14
+        {V,    V,    V,    V,    V,    V,    slex, slex, flex, V}    // 15
 };
 
 int go(char c) {
@@ -159,6 +158,8 @@ void build() {
     class[128 + '*'] = 1;
     class[128 + '/'] = 2;
     class[128 + '\n'] = 3;
+    class[128 + '\0'] = 3;
+    class[128 + '\r'] = 3;
     class[128 + '\\'] = 4;
     class[128 + '\t'] = 5;
     class[128 + ' '] = 5;

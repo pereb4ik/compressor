@@ -102,22 +102,22 @@ void fla() {
  */
 
 void (*F[16][10])() = {
-        {add,  add,  V,    add,  add,  add,  siex, siex, fiex, add},
-        {pla,  V,    V,    pla,  pla,  pla,  sla,  sla,  fla,  pla},
-        {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},
-        {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},
-        {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},
-        {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},
-        {adC,  adC,  adC,  adC,  adC,  adC,  siex, adC,  adC,  adC},
-        {adC,  adC,  adC,  adC,  adC,  adC,  adC,  adC,  adC,  adC},
-        {adC,  adC,  adC,  adC,  adC,  adC,  adC,  siex, adC,  adC},
-        {adC,  adC,  adC,  adC,  adC,  adC,  adC,  adC,  adC,  adC},
-        {fiex, fiex, fiex, fiex, fiex, fiex, fiex, fiex, adC,  fiex},
-        {add,  add,  add,  add,  add,  add,  add,  add,  add,  add},
-        {add,  add,  add,  add,  add,  add,  add,  add,  add,  add},
-        {add,  add,  V,    add,  add,  V,    siex, siex, fiex, add},
-        {add,  add,  V,    V,    add,  add,  siex, siex, fiex, add},
-        {add,  add,  V,    V,    add,  V,    siex, siex, fiex, add}
+        {add,  add,  V,    add,  add,  add,  siex, siex, fiex, add}, // 0
+        {pla,  V,    V,    pla,  pla,  pla,  sla,  sla,  fla,  pla}, // 1
+        {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},   // 2
+        {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},   // 3
+        {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},   // 4
+        {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},   // 5
+        {adC,  adC,  adC,  adC,  adC,  adC,  siex, adC,  adC,  adC}, // 6
+        {adC,  adC,  adC,  adC,  adC,  adC,  adC,  adC,  adC,  adC}, // 7
+        {adC,  adC,  adC,  adC,  adC,  adC,  adC,  siex, adC,  adC}, // 8
+        {adC,  adC,  adC,  adC,  adC,  adC,  adC,  adC,  adC,  adC}, // 9
+        {fiex, fiex, fiex, fiex, fiex, fiex, fiex, fiex, adC,  fiex},// 10
+        {add,  add,  add,  add,  add,  add,  add,  add,  add,  add}, // 11
+        {add,  add,  add,  add,  add,  add,  add,  add,  add,  add}, // 12
+        {add,  add,  V,    add,  add,  V,    siex, siex, fiex, add}, // 13
+        {add,  add,  V,    V,    add,  add,  siex, siex, fiex, add}, // 14
+        {add,  add,  V,    V,    add,  V,    siex, siex, fiex, add}  // 15
 };
 
 int go2(char c) {
