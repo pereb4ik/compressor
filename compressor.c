@@ -100,12 +100,13 @@ void calck() {
     }
 }
 
-/* // Second read
+/*
  * Read, define and write
  */
 void write(int size, char *str, char *filename) {
     indf = 0;
     curV = 0;
+    hasTokens = false;
     for (int i = 0; i < size; ++i) {
         go2(str[i]);
     }
@@ -147,6 +148,10 @@ int main(int argsn, char *args[]) {
 
     for (int i = 1; i < argsn; ++i) {
         FILE *input = fopen(args[i], "rt");
+        if (input == NULL) {
+            printf("%s %s %s", "File", args[i], "not found");
+            return EXIT_FAILURE;
+        }
         int size = fileSize(input);
         sizes[i] = size;
         maxSize = max(maxSize, size);
@@ -169,5 +174,6 @@ int main(int argsn, char *args[]) {
     freeSpace();
     hashtable_destroy(mapper);
     hashtable_destroy(lexems);
-    return 0;
+    printf("%s", "You should add ALL_DEFINES.h to includes of compiler\n");
+    return EXIT_SUCCESS;
 }

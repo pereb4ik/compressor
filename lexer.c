@@ -11,14 +11,11 @@ int class[256];
 int curV = 0;
 
 HashTable *lexems;
-
 HashTable *mapper;
 
 /**
  * transition functions
  */
-
-/// very big C in O(n)
 
 void countLexeme(char *token) {
     int *count;
@@ -39,11 +36,12 @@ void addC() {
     buff[ind++] = curChar;
 }
 
+const int MAX_LEXEM_LEN = 1000;
+
 void startLexem() {
-    buff = allocstring(1000);
+    buff = allocstring(MAX_LEXEM_LEN);
     ind = 0;
 }
-
 
 //fuck yeah string lex
 //copypaste of flex

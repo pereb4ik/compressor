@@ -8,19 +8,22 @@
 #ifndef BEST_LEXER2_C
 #define BEST_LEXER2_C
 
+/**
+ * Here used ind, curV, classes, goV from lexer
+ */
+
 char *bufff;
 
 char *outFile;
 
 int indf = 0;
-int ind0 = 0;
 
-bool hasTokens = false;
+bool hasTokens;
 
 void metadef();
 
 void adC() {
-    bufff[ind0++] = curChar;
+    bufff[ind++] = curChar;
 }
 
 void add();
@@ -29,11 +32,11 @@ void siex() {
     static int even = 1;
     even = 1 - even;
     if (even == 0) {
-        ind0 = 0;
+        ind = 0;
         adC();
     } else {
         adC();
-        bufff[ind0] = '\0';
+        bufff[ind] = '\0';
         metadef();
     }
 }
@@ -42,10 +45,10 @@ void fiex() {
     static int even = 1;
     even = 1 - even;
     if (even == 0) {
-        ind0 = 0;
+        ind = 0;
         adC();
     } else {
-        bufff[ind0] = '\0';
+        bufff[ind] = '\0';
         metadef();
         add();
     }
@@ -131,6 +134,7 @@ int go2(char c) {
  */
 
 void build2(int size) {
+    ind = 0;
     bufff = allocstring(size);
     outFile = allocstring(size);
 }
