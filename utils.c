@@ -4,6 +4,16 @@
 #ifndef BEST_UTILS_C
 #define BEST_UTILS_C
 
+
+const int NumOfSamples = 5;
+
+typedef struct {
+    char *str;
+    long fx[NumOfSamples];
+    int count;
+    int len;
+} vertex;
+
 int fileSize(FILE *f) {
     fseek(f, 0L, SEEK_END);
     int size = ftell(f);
@@ -30,6 +40,12 @@ void destroyStrings() {
     for (int i = 0; i < INDEX_ALL; ++i) {
         free(ALL_ALLOCATED_STRINGS[i]);
     }
+}
+
+
+vertex *allocvert() {
+    ALL_ALLOCATED_STRINGS[INDEX_ALL] = (vertex *) (malloc(sizeof(vertex)));
+    return ALL_ALLOCATED_STRINGS[INDEX_ALL++];
 }
 
 int max(int a, int b) {

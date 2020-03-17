@@ -13,7 +13,6 @@ char Char;
 char *bufff;
 
 char *outFile;
-int curv = 0;
 
 int indf = 0;
 int ind0 = 0;
@@ -73,9 +72,19 @@ void add() {
 }
 
 //print slash, crutch
-void sla() {
+void pla() {
     outFile[indf++] = '/';
     add();
+}
+
+void sla() {
+    outFile[indf++] = '/';
+    siex();
+}
+
+void fla() {
+    outFile[indf++] = '/';
+    fiex();
 }
 
 /**
@@ -93,7 +102,7 @@ void sla() {
 
 void (*F[16][10])() = {
         {add,  add,  V,    add,  add,  add,  siex, siex, fiex, add},
-        {sla,  V,    V,    sla,  sla,  sla,  sla,  sla,  sla,  sla},
+        {pla,  V,    V,    pla,  pla,  pla,  sla,  sla,  fla,  pla},
         {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},
         {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},
         {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},
@@ -113,9 +122,9 @@ void (*F[16][10])() = {
 int go2(char c) {
     Char = c;
     int e = class[128 + c];
-    F[curv][e]();
-    curv = goV[curv][e];
-    return curv;
+    F[curV][e]();
+    curV = goV[curV][e];
+    return curV;
 }
 
 void build2(int size) {

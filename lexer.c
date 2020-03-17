@@ -9,33 +9,25 @@
 
 #define long long long
 
-const int NumOfSamples = 5;
-
-typedef struct {
-    char *str;
-    long fx[NumOfSamples];
-    int count;
-    int len;
-} vertex;
-
 vertex *makeVert(char *str, long count) {
-    vertex p;
-    p.count = count;
-    p.str = str;
+    //printf("%s %ld new vert\n", str, count);
+    vertex *p = allocvert();
+    p->count = count;
+    p->str = str;
     int len = strlen(str);
-    p.len = len;
+    p->len = len;
     for (int i = 0; i < NumOfSamples; ++i) {
-        p.fx[i] = count * (len - (i + 1)) - (10 + len + (i + 1));
+        p->fx[i] = count * (len - (i + 1)) - (10 + len + (i + 1));
     }
-    return &p;
+    return p;
 }
 
-int compare(vertex *a, vertex *b) {
+int compare(vertex **a, vertex **b) {
     for (int i = 0; i < NumOfSamples; ++i) {
-        if (a->fx[i] < b->fx[i]) {
+        if ((*a)->fx[i] < (*b)->fx[i]) {
             return -1;
         } else {
-            if (a->fx[i] > b->fx[i]) {
+            if ((*a)->fx[i] > (*b)->fx[i]) {
                 return 1;
             }
         }
@@ -69,7 +61,6 @@ void countLexeme(char *token) {
     }
     hashtable_add(lexems, token, count);
 }
-
 
 char *buff;
 char curChar;
@@ -137,11 +128,10 @@ void V() {
 
 /**
  * please, add space/tab scipper
- * maybe add EOF???
  */
 int goV[16][10] = {
         {0,  0,  1,  14, 0,  13, 6,  8,  10, 11},// 0 start vertex
-        {0,  2,  4,  0,  0,  0,  0,  0,  0,  0}, // 1 comments start
+        {0,  2,  4,  14, 0,  13, 6,  8,  10, 11}, // 1 comments start
         {2,  3,  2,  2,  2,  2,  2,  2,  2,  2}, // 2 /* comments
         {2,  3,  0,  2,  2,  2,  2,  2,  2,  2}, // 3 /* comments
         {4,  4,  4,  0,  5,  4,  4,  4,  4,  4}, // 4 // comments
@@ -160,7 +150,7 @@ int goV[16][10] = {
 
 void (*f[16][10])() = {
         {V,    V,    V,    V,    V,    V,    slex, slex, flex, V},
-        {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},
+        {V,    V,    V,    V,    V,    V,    slex, slex, flex, V},
         {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},
         {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},
         {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},
@@ -184,18 +174,6 @@ int go(char c) {
     curV = goV[curV][e];
     return curV;
 }
-
-/**
- * 1 [*]
- * 2 [/]
- * 3 [\n]
- * 4 [\]
- * 5 [ \t]
- * 6 ["]
- * 7 [']
- * 8 [a-zA-Z0-9_]
- * 9 [#]
- */
 
 /**
  * Build 'lexems' hashtable,

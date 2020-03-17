@@ -59,53 +59,51 @@ void lex(int size, char *str) {
     for (int i = 0; i < size; ++i) {
         go(str[i]);
     }
+    printf("%d last v\n", curV);
 }
 
 void calck() {
     //build curShift
-
     curShift = allocstring(2);
-    curShift[0] = 'a' - 1;
+    curShift[0] = 'a';
     curShift[1] = '\0';
     curSize = 1;
     //
 
     int sz = hashtable_size(lexems);
-    vertex vert[sz];
-    int itr = 0;
+    vertex *vert[sz];
     HashTableIter iter;
     hashtable_iter_init(&iter, lexems);
     TableEntry *cur;
 
-    while (hashtable_iter_next(&iter, &cur) != CC_ITER_END) {
+    for (int i = 0; hashtable_iter_next(&iter, &cur) != CC_ITER_END; ++i) {
         int *val = cur->value;
-        vert[itr++] = *makeVert(cur->key, *val);
+        printf("%s %d\n", cur->key, *val);
+        vert[i] = makeVert(cur->key, *val);
     }
 
-    mergesort(vert, sz, sizeof(vertex), &compare);
+    mergesort(vert, sz, sizeof(vertex *), &compare);
 
-    printf("iter %d size %d\n", itr, sz);
-
-    for (int i = 0; i < sz - 1; ++i) {
-        printf("%s %d\n", vert[i].str, vert[i].fx[0]);
-    }
-
+    /*for (int i = 0; i < sz; ++i) {
+        printf("%s %d\n", vert[i]->str, vert[i]->fx[0]);
+    }*/
 
     int *kek;
-    for (int ind = itr - 2; ind > -1; ind--) {
-        nextStringShift();
+    for (int i = sz - 1; i > -1; i--) {
         while (hashtable_get(lexems, curShift, &kek) == CC_OK) {
             printf("%s :has\n", curShift);
             nextStringShift();
         }
         // ATTENTION, fx[a] is f(a + 1)
-        if (vert[ind].fx[curSize - 1] > 0) {
+        if (vert[i]->fx[curSize - 1] > 0) {
             char *cur = allocstring(curSize + 1);
+            cur[0] = '\0';
             strcpy(cur, curShift);
-            hashtable_add(mapper, vert[ind].str, cur);
+            hashtable_add(mapper, vert[i]->str, cur);
         } else {
             break;
         }
+        nextStringShift();
     }
 }
 
@@ -114,6 +112,7 @@ void calck() {
  */
 void write(int size, char *str, char *filename) {
     indf = 0;
+    curV = 0;
     for (int i = 0; i < size; ++i) {
         go2(str[i]);
     }
@@ -160,6 +159,7 @@ int main(int argsn, char *args[]) {
         maxSize = max(maxSize, size);
         files[i] = allocstring(size + 1);
         fread(files[i], size + 1, 1, input);
+        files[i][size] = '\0';
         fclose(input);
         lex(size + 1, files[i]);
     }
