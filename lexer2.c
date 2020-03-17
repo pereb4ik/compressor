@@ -50,7 +50,9 @@ void fiex() {
     } else {
         bufff[ind] = '\0';
         metadef();
-        add();
+        if (curChar != '/') {
+            outFile[indf++] = curChar;
+        }
     }
 }
 
@@ -88,11 +90,16 @@ void fla() {
     fiex();
 }
 
+//end of /* comments crutch (to a/**/b -> a b)
+void end() {
+    outFile[indf++] = ' ';
+}
+
 /**
  * 0 - all
  * 1 [*]
  * 2 [/]
- * 3 [\n]
+ * 3 [\n\0\r]
  * 4 [\]
  * 5 [ \t]
  * 6 ["]
@@ -105,8 +112,8 @@ void (*F[16][10])() = {
         {add,  add,  V,    add,  add,  add,  siex, siex, fiex, add}, // 0
         {pla,  V,    V,    pla,  pla,  pla,  sla,  sla,  fla,  pla}, // 1
         {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},   // 2
-        {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},   // 3
-        {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},   // 4
+        {V,    V,    end,  V,    V,    V,    V,    V,    V,    V},   // 3
+        {V,    V,    V,    add,  V,    V,    V,    V,    V,    V},   // 4
         {V,    V,    V,    V,    V,    V,    V,    V,    V,    V},   // 5
         {adC,  adC,  adC,  adC,  adC,  adC,  siex, adC,  adC,  adC}, // 6
         {adC,  adC,  adC,  adC,  adC,  adC,  adC,  adC,  adC,  adC}, // 7

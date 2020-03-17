@@ -57,8 +57,6 @@ void lex(int size, char *str) {
     for (int i = 0; i < size; ++i) {
         go(str[i]);
     }
-    printf("%d last char\n", (int) (str[size]));
-    printf("%d last v\n", curV);
 }
 
 void calck() {
@@ -77,7 +75,6 @@ void calck() {
 
     for (int i = 0; hashtable_iter_next(&iter, &cur) != CC_ITER_END; ++i) {
         int *val = cur->value;
-        printf("%s %d\n", cur->key, *val);
         vert[i] = makeVert(cur->key, *val);
     }
 
@@ -86,7 +83,6 @@ void calck() {
     int *kek;
     for (int i = hsize - 1; i > -1; i--) {
         while (hashtable_get(lexems, curShift, &kek) == CC_OK) {
-            printf("%s :has\n", curShift);
             nextStringShift();
         }
         // ATTENTION, fx[a] is f(a + 1)
