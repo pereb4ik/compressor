@@ -23,25 +23,25 @@ int fileSize(FILE *f) {
 }
 
 void *ALL_ALLOCATED[100000];
-int INDEX_ALL = 0;
+int INDEX_ALLOC = 0;
 
 char *allocstring(int size) {
-    ALL_ALLOCATED[INDEX_ALL] = (char *) (malloc(sizeof(char) * size));
-    return ALL_ALLOCATED[INDEX_ALL++];
+    ALL_ALLOCATED[INDEX_ALLOC] = (char *) (malloc(sizeof(char) * size));
+    return ALL_ALLOCATED[INDEX_ALLOC++];
 }
 
 int *allocint() {
-    ALL_ALLOCATED[INDEX_ALL] = (int *) (malloc(sizeof(int)));
-    return ALL_ALLOCATED[INDEX_ALL++];
+    ALL_ALLOCATED[INDEX_ALLOC] = (int *) (malloc(sizeof(int)));
+    return ALL_ALLOCATED[INDEX_ALLOC++];
 }
 
 vertex *allocvert() {
-    ALL_ALLOCATED[INDEX_ALL] = (vertex *) (malloc(sizeof(vertex)));
-    return ALL_ALLOCATED[INDEX_ALL++];
+    ALL_ALLOCATED[INDEX_ALLOC] = (vertex *) (malloc(sizeof(vertex)));
+    return ALL_ALLOCATED[INDEX_ALLOC++];
 }
 
 void freeSpace() {
-    for (int i = 0; i < INDEX_ALL; ++i) {
+    for (int i = 0; i < INDEX_ALLOC; ++i) {
         free(ALL_ALLOCATED[i]);
     }
 }
@@ -65,6 +65,9 @@ vertex *makeVert(char *str, long count) {
     return p;
 }
 
+/**
+ * Compare in lexicographic order in points
+ */
 int compare(vertex **a, vertex **b) {
     for (int i = 0; i < NumOfSamples; ++i) {
         if ((*a)->fx[i] < (*b)->fx[i]) {

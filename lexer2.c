@@ -12,8 +12,8 @@
  * Here used ind, curV, classes, goV from lexer
  */
 
+//buffer of lexeme
 char *bufff;
-
 char *outFile;
 
 int indf = 0;
@@ -75,6 +75,7 @@ void definer() {
     }
 }
 
+//add character to outfile
 void add() {
     outFile[indf++] = curChar;
 }
@@ -103,6 +104,8 @@ void end() {
 }
 
 /**
+ * Classes of characters
+ *
  * 0 - all
  * 1 [*]
  * 2 [/]
@@ -146,7 +149,6 @@ int go2(char c) {
  * Build bufff and outfile by size
  */
 void build2(int size) {
-    ind = 0;
     bufff = allocstring(size);
     outFile = allocstring(size);
 }

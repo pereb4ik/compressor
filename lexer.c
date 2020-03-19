@@ -1,27 +1,35 @@
 #include <stdlib.h>
-#include <form.h>
 #include "collections/hashtable.h"
 #include "utils.c"
 
 #ifndef BEST_LEXER_C
 #define BEST_LEXER_C
 
+const int MAX_LEXEM_LEN = 1000;
 //class of character
 int class[256];
 
 int curV = 0;
 
+/**
+ * Table of all lexemes(tokens+strring constants) in all files
+ */
 HashTable *lexems;
+/**
+ * Table of lexeme defines
+ */
 HashTable *mapper;
 
+//buff of lexeme
 char *buff;
+//current character
 char curChar;
+// current index in buff
 int ind;
 
 /**
  * transition functions
  */
-
 void countLexeme(char *token) {
     int *count;
     if (hashtable_get(lexems, token, &count) == CC_OK) {
@@ -29,16 +37,14 @@ void countLexeme(char *token) {
     } else {
         count = allocint();
         *count = 1;
+        hashtable_add(lexems, token, count);
     }
-    hashtable_add(lexems, token, count);
 }
 
 //add char to buff(of lexem)
 void addC() {
     buff[ind++] = curChar;
 }
-
-const int MAX_LEXEM_LEN = 1000;
 
 void startLexem() {
     buff = allocstring(MAX_LEXEM_LEN);
@@ -82,6 +88,8 @@ void V() {
 //////////////////
 
 /**
+ * Classes of characters
+ *
  * 0 - all
  * 1 [*]
  * 2 [/]
@@ -94,6 +102,9 @@ void V() {
  * 9 [#]
  */
 
+/**
+ * Graph
+ */
 int goV[16][10] = {
         {0,  0,  1,  14, 0,  13, 6,  8,  10, 11},// 0 start vertex
         {0,  2,  4,  14, 0,  13, 6,  8,  10, 11},// 1 comments start
@@ -113,6 +124,9 @@ int goV[16][10] = {
         {0,  0,  1,  15, 0,  15, 6,  8,  10, 11} // 15 [ \t\n] scipper
 };
 
+/**
+ * Actions on edge pass
+ */
 void (*f[16][10])() = {
         {V,    V,    V,    V,    V,    V,    slex, slex, flex, V},   // 0
         {V,    V,    V,    V,    V,    V,    slex, slex, flex, V},   // 1

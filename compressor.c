@@ -50,7 +50,7 @@ void nextStringShift() {
     }
 }
 
-/*
+/**
  * First lex
  */
 void lex(int size, char *str) {
@@ -59,6 +59,9 @@ void lex(int size, char *str) {
     }
 }
 
+/**
+ * Build mapper
+ */
 void calck() {
     //build curShift
     curShift = allocstring(2);
@@ -97,7 +100,7 @@ void calck() {
     }
 }
 
-/*
+/**
  * Read, define and write
  */
 void write(int size, char *str, char *filename) {
@@ -117,8 +120,8 @@ void write(int size, char *str, char *filename) {
 }
 
 /**
-  * Write defines to file
-  */
+ * Write defines to file
+ */
 void writeHead() {
     if (hashtable_size(mapper) > 0) {
         printf("%lu size of mapper\n", hashtable_size(mapper));
@@ -165,7 +168,7 @@ int main(int argsn, char *args[]) {
     for (int i = 1; i < argsn; ++i) {
         write(sizes[i] + 1, files[i], args[i]);
     }
-    
+
     writeHead();
 
     //destroy all
