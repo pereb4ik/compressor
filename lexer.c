@@ -1,4 +1,3 @@
-#include <stdlib.h>
 #include "collections/hashtable.h"
 #include "utils.c"
 

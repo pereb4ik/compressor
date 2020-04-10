@@ -81,7 +81,9 @@ void calck() {
         vert[i] = makeVert(cur->key, *val);
     }
 
-    mergesort(vert, hsize, sizeof(vertex *), &compare);
+    qsort(vert, hsize, sizeof(vertex *), &compare);
+
+    //mergesort(vert, hsize, sizeof(vertex *), &compare);
 
     int *trash;
     for (int i = hsize - 1; i > -1; i--) {

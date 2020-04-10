@@ -6,7 +6,7 @@
 #ifndef BEST_UTILS_C
 #define BEST_UTILS_C
 
-const int NumOfSamples = 5;
+#define NumOfSamples 5
 
 typedef struct {
     char *str;

@@ -1,5 +1,3 @@
-#include <stdlib.h>
-#include <form.h>
 #include "collections/hashtable.h"
 #include "utils.c"
 
