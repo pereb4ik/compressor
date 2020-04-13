@@ -61,7 +61,7 @@ void fiex() {
 //define(or not) lexeme by mapper
 void definer() {
     char *def;
-    if (hashtable_get(mapper, bufff, &def) == CC_OK) {
+    if (hashtable_get(mapper, bufff, (void **) &def) == CC_OK) {
         hasTokens = true;
         for (int i = 0; def[i] != '\0'; ++i) {
             outFile[indf++] = def[i];

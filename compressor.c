@@ -71,7 +71,8 @@ void calck() {
     //
 
     int hsize = hashtable_size(lexems);
-    vertex *vert[hsize];
+    //vertex *vert[hsize];
+    vertex **vert = allocVertArray(hsize);
     HashTableIter iter;
     hashtable_iter_init(&iter, lexems);
     TableEntry *cur;
@@ -81,13 +82,11 @@ void calck() {
         vert[i] = makeVert(cur->key, *val);
     }
 
-    qsort(vert, hsize, sizeof(vertex *), &compare);
-
-    //mergesort(vert, hsize, sizeof(vertex *), &compare);
+    qsort(vert, hsize, sizeof(vertex *), &comparator);
 
     int *trash;
     for (int i = hsize - 1; i > -1; i--) {
-        while (hashtable_get(lexems, curShift, &trash) == CC_OK) {
+        while (hashtable_get(lexems, curShift, (void **) &trash) == CC_OK) {
             nextStringShift();
         }
         // ATTENTION, fx[a] is f(a + 1)
@@ -112,30 +111,48 @@ void write(int size, char *str, char *filename) {
     for (int i = 0; i < size; ++i) {
         go2(str[i]);
     }
+    outFile[indf - 1] = '\n';
     outFile[indf] = '\0';
     FILE *output = fopen(filename, "wt");
     if (hasTokens) {
         fprintf(output, "%s", "#include \"ALL_DEFINES.h\"\n");
     }
-    fprintf(output, "%s", outFile);
+    int c = 0;
+    int i = 0;
+    int ln = 10;
+    int lr = 13;
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) || defined(__WIN32__) || defined(_WIN64) \
+ || defined(__CYGWIN__) || defined(__MINGW32__) || defined(__MINGW64__) || defined(WINNT) \
+ || defined(__WINNT) || defined(__WINNT__) || defined(_MSC_VER) || defined(_MSC_FULL_VER)
+    while ((c = outFile[i++]) != '\0') {
+        if (c == ln) {
+            fputc(lr, output);
+        }
+        fputc(c, output);
+    }
+#else
+    while ((c = outFile[i++]) != '\0') {
+        fputc(c, output);
+    }
+#endif
     fclose(output);
 }
 
 /**
  * Write defines to file
  */
-void writeHead() {
+void writeHeader() {
     if (hashtable_size(mapper) > 0) {
-        printf("%lu size of mapper\n", hashtable_size(mapper));
+        printf("%zu size of mapper\n", hashtable_size(mapper));
         FILE *head = fopen("ALL_DEFINES.h", "wt");
         HashTableIter iter;
         hashtable_iter_init(&iter, mapper);
         TableEntry *cur;
         while (hashtable_iter_next(&iter, &cur) != CC_ITER_END) {
             fprintf(head, "%s", "#define ");
-            fprintf(head, "%s", cur->value);
+            fprintf(head, "%s", (char *) (cur->value));
             fprintf(head, "%s", " ");
-            fprintf(head, "%s", cur->key);
+            fprintf(head, "%s", (char *) (cur->key));
             fprintf(head, "%s", "\n");
         }
         fclose(head);
@@ -144,24 +161,15 @@ void writeHead() {
 
 int main(int argsn, char *args[]) {
     build();
-    char *files[argsn];
-    int sizes[argsn];
+    char **files = allocStringArray(argsn);
+    int *sizes = allocIntArray(argsn);
     int maxSize = 0;
 
     for (int i = 1; i < argsn; ++i) {
-        FILE *input = fopen(args[i], "rt");
-        if (input == NULL) {
-            printf("%s %s %s", "File", args[i], "not found");
-            return EXIT_FAILURE;
-        }
-        int size = fileSize(input);
-        sizes[i] = size;
-        maxSize = max(maxSize, size);
-        files[i] = allocstring(size + 1);
-        fread(files[i], size + 1, 1, input);
-        files[i][size] = '\0';
-        fclose(input);
-        lex(size + 1, files[i]);
+        sizes[i] = fileSize(args[i]);
+        maxSize = mx(maxSize, sizes[i]);
+        files[i] = readFile(args[i], sizes[i]);
+        lex(sizes[i] + 1, files[i]);
     }
 
     calck();
@@ -171,7 +179,7 @@ int main(int argsn, char *args[]) {
         write(sizes[i] + 1, files[i], args[i]);
     }
 
-    writeHead();
+    writeHeader();
 
     //destroy all
     freeSpace();

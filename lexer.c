@@ -31,7 +31,7 @@ int ind;
  */
 void countLexeme(char *token) {
     int *count;
-    if (hashtable_get(lexems, token, &count) == CC_OK) {
+    if (hashtable_get(lexems, token, (void **) (&count)) == CC_OK) {
         (*count)++;
     } else {
         count = allocint();
