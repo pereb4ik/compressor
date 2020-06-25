@@ -71,8 +71,8 @@ void calck() {
     //
 
     int hsize = hashtable_size(lexems);
-    //vertex *vert[hsize];
     vertex **vert = allocVertArray(hsize);
+
     HashTableIter iter;
     hashtable_iter_init(&iter, lexems);
     TableEntry *cur;
@@ -145,16 +145,15 @@ void writeHeader() {
     if (hashtable_size(mapper) > 0) {
         printf("%zu size of mapper\n", hashtable_size(mapper));
         FILE *head = fopen("ALL_DEFINES.h", "wt");
-        HashTableIter iter;
-        hashtable_iter_init(&iter, mapper);
-        TableEntry *cur;
-        while (hashtable_iter_next(&iter, &cur) != CC_ITER_END) {
+        char *key;
+        char *value;
+        HASHTABLE_FOREACH(mapper, key, value, {
             fprintf(head, "%s", "#define ");
-            fprintf(head, "%s", (char *) (cur->value));
+            fprintf(head, "%s", value);
             fprintf(head, "%s", " ");
-            fprintf(head, "%s", (char *) (cur->key));
+            fprintf(head, "%s", key);
             fprintf(head, "%s", "\n");
-        }
+        })
         fclose(head);
     }
 }

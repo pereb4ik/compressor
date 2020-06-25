@@ -3,8 +3,8 @@
 
 #define long long long
 
-#ifndef UTILS_C
-#define UTILS_C
+#ifndef COMPRESSOR_UTILS_C
+#define COMPRESSOR_UTILS_C
 
 #define NumOfSamples 5
 
@@ -118,4 +118,4 @@ char *readFile(char *filename, int filesize) {
     return buff;
 }
 
-#endif
+#endif // COMPRESSOR_UTILS_C

@@ -3,8 +3,8 @@
 
 #include "lexer.c"
 
-#ifndef LEXER2_C
-#define LEXER2_C
+#ifndef COMPRESSOR_LEXER2_C
+#define COMPRESSOR_LEXER2_C
 
 /**
  * Here used ind, curV, classes, goV from lexer
@@ -151,4 +151,4 @@ void build2(int size) {
     outFile = allocstring(size);
 }
 
-#endif
+#endif // COMPRESSOR_LEXER2_C
