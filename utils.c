@@ -3,8 +3,8 @@
 
 #define long long long
 
-#ifndef BEST_UTILS_C
-#define BEST_UTILS_C
+#ifndef UTILS_C
+#define UTILS_C
 
 #define NumOfSamples 5
 

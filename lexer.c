@@ -1,8 +1,8 @@
 #include "collections/hashtable.h"
 #include "utils.c"
 
-#ifndef BEST_LEXER_C
-#define BEST_LEXER_C
+#ifndef LEXER_C
+#define LEXER_C
 
 const int MAX_LEXEM_LEN = 1000;
 //class of character

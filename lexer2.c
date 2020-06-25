@@ -3,8 +3,8 @@
 
 #include "lexer.c"
 
-#ifndef BEST_LEXER2_C
-#define BEST_LEXER2_C
+#ifndef LEXER2_C
+#define LEXER2_C
 
 /**
  * Here used ind, curV, classes, goV from lexer
