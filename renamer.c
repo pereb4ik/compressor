@@ -3,14 +3,12 @@
 
 #include "lexer.c"
 
-#ifndef COMPRESSOR_LEXER2_C
-#define COMPRESSOR_LEXER2_C
+#ifndef COMPRESSOR_REPLACER_C
+#define COMPRESSOR_REPLACER_C
 
-/**
- * Here used ind, curV, classes, goV from lexer
- */
+// In this file reused ind, v, classes, goV from lexer
 
-//buffer of lexeme
+// Buffer for lexeme
 char *bufff;
 char *outFile;
 
@@ -18,48 +16,8 @@ int indf = 0;
 
 bool hasTokens;
 
-void definer();
-
-//add char to bufff
-void adC() {
-    bufff[ind++] = curChar;
-}
-
-//add char to file
-void add();
-
-//start/end string const
-void siex() {
-    static int even = 0;
-    even = 1 - even;
-    if (even) {
-        ind = 0;
-        adC();
-    } else {
-        adC();
-        bufff[ind] = '\0';
-        definer();
-    }
-}
-
-//start/end lexeme
-void fiex() {
-    static int even = 0;
-    even = 1 - even;
-    if (even) {
-        ind = 0;
-        adC();
-    } else {
-        bufff[ind] = '\0';
-        definer();
-        if (curChar != '/') {
-            outFile[indf++] = curChar;
-        }
-    }
-}
-
-//define(or not) lexeme by mapper
-void definer() {
+// Rename(or not) lexeme by mapper
+void renamer() {
     char *def;
     if (hashtable_get(mapper, bufff, (void **) &def) == CC_OK) {
         hasTokens = true;
@@ -73,38 +31,74 @@ void definer() {
     }
 }
 
-//add character to outfile
+// Add character to bufff
+void adC() {
+    bufff[ind++] = curChar;
+}
+
+// Add character to outfile
 void add() {
     outFile[indf++] = curChar;
 }
 
-//print slash, crutch
+// start/end string const
+void siex() {
+    static int even = 0;
+    even = 1 - even;
+    if (even) {
+        ind = 0;
+        adC();
+    } else {
+        adC();
+        bufff[ind] = '\0';
+        renamer();
+    }
+}
+
+// start/end lexeme
+void fiex() {
+    static int even = 0;
+    even = 1 - even;
+    if (even) {
+        ind = 0;
+        adC();
+    } else {
+        bufff[ind] = '\0';
+        renamer();
+        if (curChar != '/') {
+            outFile[indf++] = curChar;
+        }
+    }
+}
+
+// Print slash, crutch
 void pla() {
     outFile[indf++] = '/';
     add();
 }
 
-//slash before string
+// slash before string
 void sla() {
     outFile[indf++] = '/';
     siex();
 }
 
-//slash before lexem
+// slash before lexem
 void fla() {
     outFile[indf++] = '/';
     fiex();
 }
 
-//end of /* comments crutch (to a/**/b -> a b)
+// End of /* comments crutch (to a/**/b -> a b)
 void end() {
     outFile[indf++] = ' ';
 }
 
 /**
+ *
  * Classes of characters
  *
- * 0 - all
+ * 0 - all another
  * 1 [*]
  * 2 [/]
  * 3 [\n\0\r]
@@ -116,6 +110,9 @@ void end() {
  * 9 [#]
  */
 
+/**
+ * Actions on edge pass
+ */
 void (*F[16][10])() = {
         {add,  add,  V,    add,  add,  add,  siex, siex, fiex, add}, // 0
         {pla,  V,    V,    pla,  pla,  pla,  sla,  sla,  fla,  pla}, // 1
@@ -138,17 +135,15 @@ void (*F[16][10])() = {
 int go2(char c) {
     curChar = c;
     int e = class[128 + c];
-    F[curV][e]();
-    curV = goV[curV][e];
-    return curV;
+    F[v][e]();
+    v = goV[v][e];
+    return v;
 }
 
-/**
- * Build bufff and outfile by size
- */
+// Build bufff and outfile by his size
 void build2(int size) {
-    bufff = allocstring(size);
-    outFile = allocstring(size);
+    bufff = allocString(size);
+    outFile = allocString(size);
 }
 
-#endif // COMPRESSOR_LEXER2_C
+#endif // COMPRESSOR_REPLACER_C

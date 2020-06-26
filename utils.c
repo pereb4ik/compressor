@@ -1,30 +1,40 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define long long long
-
 #ifndef COMPRESSOR_UTILS_C
 #define COMPRESSOR_UTILS_C
 
+#define long long long
 #define NumOfSamples 5
+#define MaxNumOfAllocations 100000
 
 typedef struct {
-    char *str;
+    char *word;
     long fx[NumOfSamples];
-    int count;
-    int len;
-} vertex;
+} Vertex;
 
-void *ALL_ALLOCATED[100000];
+void *ALL_ALLOCATED[MaxNumOfAllocations];
 int INDEX_ALLOC = 0;
 
-char *allocstring(int size) {
-    ALL_ALLOCATED[INDEX_ALLOC] = (char *) (malloc(sizeof(char) * size));
+int mx(int a, int b) {
+    if (a > b) {
+        return a;
+    }
+    return b;
+}
+
+int *allocInt() {
+    ALL_ALLOCATED[INDEX_ALLOC] = (int *) (malloc(sizeof(int)));
     return ALL_ALLOCATED[INDEX_ALLOC++];
 }
 
-int *allocint() {
-    ALL_ALLOCATED[INDEX_ALLOC] = (int *) (malloc(sizeof(int)));
+Vertex *allocVertex() {
+    ALL_ALLOCATED[INDEX_ALLOC] = (Vertex *) (malloc(sizeof(Vertex)));
+    return ALL_ALLOCATED[INDEX_ALLOC++];
+}
+
+char *allocString(int size) {
+    ALL_ALLOCATED[INDEX_ALLOC] = (char *) (malloc(sizeof(char) * size));
     return ALL_ALLOCATED[INDEX_ALLOC++];
 }
 
@@ -38,13 +48,8 @@ char **allocStringArray(int size) {
     return ALL_ALLOCATED[INDEX_ALLOC++];
 }
 
-vertex *allocvert() {
-    ALL_ALLOCATED[INDEX_ALLOC] = (vertex *) (malloc(sizeof(vertex)));
-    return ALL_ALLOCATED[INDEX_ALLOC++];
-}
-
-vertex **allocVertArray(int size) {
-    ALL_ALLOCATED[INDEX_ALLOC] = (vertex **) (malloc(sizeof(vertex *) * size));
+Vertex **allocVertexArray(int size) {
+    ALL_ALLOCATED[INDEX_ALLOC] = (Vertex **) (malloc(sizeof(Vertex *) * size));
     return ALL_ALLOCATED[INDEX_ALLOC++];
 }
 
@@ -54,31 +59,20 @@ void freeSpace() {
     }
 }
 
-int mx(int a, int b) {
-    if (a > b) {
-        return a;
-    }
-    return b;
-}
-
-vertex *makeVert(char *str, long count) {
-    vertex *p = allocvert();
-    p->count = count;
-    p->str = str;
+Vertex *makeVertex(char *str, long count) {
+    Vertex *p = allocVertex();
+    p->word = str;
     int len = strlen(str);
-    p->len = len;
     for (int i = 0; i < NumOfSamples; ++i) {
         p->fx[i] = count * (len - (i + 1)) - (10 + len + (i + 1));
     }
     return p;
 }
 
-/**
- * Compare in lexicographic order in points
- */
+// Compare in lexicographic order in points
 int comparator(const void *a, const void *b) {
-    vertex **A = (vertex **) a;
-    vertex **B = (vertex **) b;
+    Vertex **A = (Vertex **) a;
+    Vertex **B = (Vertex **) b;
     for (int i = 0; i < NumOfSamples; ++i) {
         if ((*A)->fx[i] < (*B)->fx[i]) {
             return -1;
@@ -91,7 +85,6 @@ int comparator(const void *a, const void *b) {
     return 0;
 }
 
-//ohh
 int fileSize(char *filename) {
     FILE *f = fopen(filename, "rt");
     int file_size = 0;
@@ -101,11 +94,12 @@ int fileSize(char *filename) {
     return file_size;
 }
 
+// Reading with changing \t to \n
 char *readFile(char *filename, int filesize) {
-    char *buff = allocstring(filesize + 1);
+    char *buff = allocString(filesize + 1);
     FILE *f = fopen(filename, "rt");
     int i = 0;
-    int c = 0;
+    int c;
     while ((c = fgetc(f)) != EOF) {
         if (c == 13) {
             buff[i++] = 10;

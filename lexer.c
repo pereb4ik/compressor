@@ -1,95 +1,33 @@
 #include "collections/hashtable.h"
 #include "utils.c"
 
-#ifndef LEXER_C
-#define LEXER_C
+#ifndef COMPRESSOR_LEXER_C
+#define COMPRESSOR_LEXER_C
 
 const int MAX_LEXEM_LEN = 1000;
-//class of character
+
+// Class of character by ascii code
 int class[256];
 
-int curV = 0;
+int v = 0;
 
-/**
- * Table of all lexemes(tokens+strring constants) in all files
- */
+// Table of all lexemes(tokens+string constants) in all files
 HashTable *lexems;
-/**
- * Table of lexeme defines
- */
+
+// Table of lexeme defines
 HashTable *mapper;
 
-//buff of lexeme
+// Buffer for lexeme
 char *buff;
-//current character
 char curChar;
-// current index in buff
+// Current index in buff
 int ind;
 
 /**
- * transition functions
- */
-void countLexeme(char *token) {
-    int *count;
-    if (hashtable_get(lexems, token, (void **) (&count)) == CC_OK) {
-        (*count)++;
-    } else {
-        count = allocint();
-        *count = 1;
-        hashtable_add(lexems, token, count);
-    }
-}
-
-//add char to buff(of lexem)
-void addC() {
-    buff[ind++] = curChar;
-}
-
-void startLexem() {
-    buff = allocstring(MAX_LEXEM_LEN);
-    ind = 0;
-}
-
-//yeah string lex
-//copypaste of flex
-//start/end string const
-void slex() {
-    static int even = 0;
-    even = 1 - even;
-    if (even) {
-        startLexem();
-        addC();
-    } else {
-        addC();
-        buff[ind] = '\0';
-        countLexeme(buff);
-    }
-}
-
-//yeah, lex
-//start/end lexeme
-void flex() {
-    static int even = 0;
-    even = 1 - even;
-    if (even) {
-        startLexem();
-        addC();
-    } else {
-        buff[ind] = '\0';
-        countLexeme(buff);
-    }
-}
-
-//void function
-void V() {
-
-}
-//////////////////
-
-/**
+ *
  * Classes of characters
  *
- * 0 - all
+ * 0 - all another
  * 1 [*]
  * 2 [/]
  * 3 [\n\0\r]
@@ -102,10 +40,10 @@ void V() {
  */
 
 /**
- * Graph
+ * Graph of finite state automata of lexer
  */
 int goV[16][10] = {
-        {0,  0,  1,  14, 0,  13, 6,  8,  10, 11},// 0 start vertex
+        {0,  0,  1,  14, 0,  13, 6,  8,  10, 11},// 0 start Vertex
         {0,  2,  4,  14, 0,  13, 6,  8,  10, 11},// 1 comments start
         {2,  3,  2,  2,  2,  2,  2,  2,  2,  2}, // 2 /* comments
         {2,  3,  0,  2,  2,  2,  2,  2,  2,  2}, // 3 /* comments
@@ -122,6 +60,14 @@ int goV[16][10] = {
         {0,  0,  1,  14, 0,  15, 6,  8,  10, 11},// 14 [\n] scipper
         {0,  0,  1,  15, 0,  15, 6,  8,  10, 11} // 15 [ \t\n] scipper
 };
+
+void addC();
+
+void V();
+
+void flex();
+
+void slex();
 
 /**
  * Actions on edge pass
@@ -145,25 +91,74 @@ void (*f[16][10])() = {
         {V,    V,    V,    V,    V,    V,    slex, slex, flex, V}    // 15
 };
 
+void countLexeme(char *token) {
+    int *count;
+    if (hashtable_get(lexems, token, (void **) (&count)) == CC_OK) {
+        (*count)++;
+    } else {
+        count = allocInt();
+        *count = 1;
+        hashtable_add(lexems, token, count);
+    }
+}
+
+void startLexem() {
+    buff = allocString(MAX_LEXEM_LEN);
+    ind = 0;
+}
+
+// Here starts transition functions
+
+// Add char to buff(of lexem)
+void addC() {
+    buff[ind++] = curChar;
+}
+
+// String lex, copypaste of flex
+// start/end string const
+void slex() {
+    static int even = 0;
+    even = 1 - even;
+    if (even) {
+        startLexem();
+        addC();
+    } else {
+        addC();
+        buff[ind] = '\0';
+        countLexeme(buff);
+    }
+}
+
+// lex start/end lexeme
+void flex() {
+    static int even = 0;
+    even = 1 - even;
+    if (even) {
+        startLexem();
+        addC();
+    } else {
+        buff[ind] = '\0';
+        countLexeme(buff);
+    }
+}
+
+void V() {}
+
+// Going over the graph from vertex to another by char class
 int go(char c) {
     curChar = c;
     int e = class[128 + c];
-    f[curV][e]();
-    curV = goV[curV][e];
-    return curV;
+    f[v][e]();
+    v = goV[v][e];
+    return v;
 }
 
-/**
- * Build 'lexems' hashtable,
- *       'mapper' hashtable,
- *       class mapper
- */
-
+// Build 'lexems' hashtable, 'mapper' hashtable, class mapper
 void build() {
     hashtable_new(&lexems);
     hashtable_new(&mapper);
 
-    // define classes
+    // Define classes
 
     for (int i = 0; i < 256; ++i) {
         class[i] = 0;
@@ -189,7 +184,6 @@ void build() {
     }
     class[128 + '_'] = 8;
     class[128 + '#'] = 9;
-
 }
 
-#endif
+#endif // COMPRESSOR_LEXER_C
