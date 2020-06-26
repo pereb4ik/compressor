@@ -1,9 +1,0 @@
-#asdasd asd
-a
-sd
-asda
-sda
-sd
-int/*123123*/a = 123;
-int b = 123;
-int c = 1_23;char* heh="asdas"/"123"
