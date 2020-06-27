@@ -4,7 +4,7 @@
 #ifndef COMPRESSOR_LEXER_C
 #define COMPRESSOR_LEXER_C
 
-const int MAX_LEXEM_LEN = 1000;
+#define MAX_LEXEM_LEN 1000
 
 // Class of character by ascii code
 int class[256];
@@ -22,6 +22,7 @@ char *buff;
 char curChar;
 // Current index in buff
 int ind;
+int buffSize = 10;
 
 /**
  *
@@ -103,7 +104,8 @@ void countLexeme(char *token) {
 }
 
 void startLexem() {
-    buff = allocString(MAX_LEXEM_LEN);
+    buffSize = 50;
+    buff = allocString(buffSize + 1);
     ind = 0;
 }
 
@@ -111,6 +113,13 @@ void startLexem() {
 
 // Add char to buff(of lexem)
 void addC() {
+    if (ind >= buffSize) {
+        buffSize = buffSize * 2;
+        char *bf = allocString(buffSize + 1);
+        buff[ind] = '\0';
+        strcpy(bf, buff);
+        buff = bf;
+    }
     buff[ind++] = curChar;
 }
 

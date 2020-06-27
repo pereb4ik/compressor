@@ -140,9 +140,8 @@ int go2(char c) {
     return v;
 }
 
-// Build bufff and outfile by his size
 void build2(int size) {
-    bufff = allocString(size);
+    bufff = allocString(MAX_LEXEM_LEN);
     outFile = allocString(size);
 }
 

@@ -6,15 +6,16 @@
 
 #define long long long
 #define NumOfSamples 5
-#define MaxNumOfAllocations 100000
 
 typedef struct {
     char *word;
     long fx[NumOfSamples];
 } Vertex;
 
-void *ALL_ALLOCATED[MaxNumOfAllocations];
-int INDEX_ALLOC = 0;
+void **ALL_ALLOCATED[33];
+int INDEX_ALLOC = 10;
+int CURRENT_BUCKET = 0;
+int SHIFT = (1 << 0);
 
 int mx(int a, int b) {
     if (a > b) {
@@ -23,38 +24,49 @@ int mx(int a, int b) {
     return b;
 }
 
+void *next(void *link) {
+    INDEX_ALLOC++;
+    if (SHIFT <= INDEX_ALLOC) {
+        CURRENT_BUCKET++;
+        SHIFT = 1 << CURRENT_BUCKET;
+        INDEX_ALLOC = 0;
+        ALL_ALLOCATED[CURRENT_BUCKET] = (void *) (malloc(sizeof(void *) * (1 << CURRENT_BUCKET)));
+    }
+    ALL_ALLOCATED[CURRENT_BUCKET][INDEX_ALLOC] = link;
+    return link;
+}
+
 int *allocInt() {
-    ALL_ALLOCATED[INDEX_ALLOC] = (int *) (malloc(sizeof(int)));
-    return ALL_ALLOCATED[INDEX_ALLOC++];
+    return next(malloc(sizeof(int)));
 }
 
 Vertex *allocVertex() {
-    ALL_ALLOCATED[INDEX_ALLOC] = (Vertex *) (malloc(sizeof(Vertex)));
-    return ALL_ALLOCATED[INDEX_ALLOC++];
+    return next(malloc(sizeof(Vertex)));
 }
 
 char *allocString(int size) {
-    ALL_ALLOCATED[INDEX_ALLOC] = (char *) (malloc(sizeof(char) * size));
-    return ALL_ALLOCATED[INDEX_ALLOC++];
+    return next(malloc(sizeof(char) * size));
 }
 
 int *allocIntArray(int size) {
-    ALL_ALLOCATED[INDEX_ALLOC] = (int *) (malloc(sizeof(int) * size));
-    return ALL_ALLOCATED[INDEX_ALLOC++];
+    return next(malloc(sizeof(int) * size));
 }
 
 char **allocStringArray(int size) {
-    ALL_ALLOCATED[INDEX_ALLOC] = (char **) (malloc(sizeof(char *) * size));
-    return ALL_ALLOCATED[INDEX_ALLOC++];
+    return next(malloc(sizeof(char *) * size));
 }
 
 Vertex **allocVertexArray(int size) {
-    ALL_ALLOCATED[INDEX_ALLOC] = (Vertex **) (malloc(sizeof(Vertex *) * size));
-    return ALL_ALLOCATED[INDEX_ALLOC++];
+    return next(malloc(sizeof(Vertex *) * size));
 }
 
 void freeSpace() {
-    for (int i = 0; i < INDEX_ALLOC; ++i) {
+    for (int i = 1; i <= CURRENT_BUCKET; ++i) {
+        for (int j = 0; j < (1 << i); ++j) {
+            free(ALL_ALLOCATED[i][j]);
+        }
+    }
+    for (int i = 1; i <= CURRENT_BUCKET; ++i) {
         free(ALL_ALLOCATED[i]);
     }
 }
