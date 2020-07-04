@@ -105,7 +105,7 @@ void countLexeme(char *token) {
 
 void startLexem() {
     buffSize = 50;
-    buff = allocString(buffSize + 1);
+    buff = allocString(buffSize);
     ind = 0;
 }
 
@@ -113,12 +113,9 @@ void startLexem() {
 
 // Add char to buff(of lexem)
 void addC() {
-    if (ind >= buffSize) {
+    if (ind >= buffSize - 1) {
         buffSize = buffSize * 2;
-        char *bf = allocString(buffSize + 1);
-        buff[ind] = '\0';
-        strcpy(bf, buff);
-        buff = bf;
+        buff = reallocString(buffSize);
     }
     buff[ind++] = curChar;
 }

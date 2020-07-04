@@ -16,6 +16,7 @@ void **ALL_ALLOCATED[33];
 int INDEX_ALLOC = 10;
 int CURRENT_BUCKET = 0;
 int SHIFT = (1 << 0);
+void **buffLink;
 
 int mx(int a, int b) {
     if (a > b) {
@@ -45,7 +46,14 @@ Vertex *allocVertex() {
 }
 
 char *allocString(int size) {
-    return next(malloc(sizeof(char) * size));
+    next(malloc(sizeof(char) * size));
+    buffLink = &ALL_ALLOCATED[CURRENT_BUCKET][INDEX_ALLOC];
+    return *buffLink;
+}
+
+char *reallocString(int size) {
+    *buffLink = realloc(*buffLink, sizeof(char) * size);
+    return *buffLink;
 }
 
 int *allocIntArray(int size) {
@@ -61,9 +69,14 @@ Vertex **allocVertexArray(int size) {
 }
 
 void freeSpace() {
-    for (int i = 1; i <= CURRENT_BUCKET; ++i) {
+    for (int i = 1; i < CURRENT_BUCKET; ++i) {
         for (int j = 0; j < (1 << i); ++j) {
             free(ALL_ALLOCATED[i][j]);
+        }
+    }
+    if (CURRENT_BUCKET >= 1) {
+        for (int i = 0; i <= INDEX_ALLOC; ++i) {
+            free(ALL_ALLOCATED[CURRENT_BUCKET][i]);
         }
     }
     for (int i = 1; i <= CURRENT_BUCKET; ++i) {
