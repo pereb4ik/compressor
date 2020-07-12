@@ -92,7 +92,8 @@ void buildMapper() {
             char *cur = allocString(shiftSize + 1);
             strcpy(cur, stringShift);
             hashtable_add(mapper, vertices[i]->word, cur);
-        } else {
+        }
+        if (vertices[i]->fx[0] < 0) {
             break;
         }
         nextStringShift();
